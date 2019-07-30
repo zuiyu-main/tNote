@@ -10,9 +10,9 @@ export default new Router({
       path: '/',
       name: 'Editor',
       component: Editor
-    },{
+    }, {
       path: '/uedit/edit',
-      name:'uedit',
+      name: 'uedit',
       component: UEdit
     },
     {

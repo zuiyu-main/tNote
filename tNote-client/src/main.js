@@ -5,22 +5,24 @@ import App from './App'
 import router from './router'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-//ueditor
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+// ueditor
 import '../static/UE/ueditor.config.js'
 import '../static/UE/ueditor.all.min.js'
 import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
 
-
-Vue.use(ElementUI);
+Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.use(mavonEditor)
-new Vue({
-    el: '#app',
-    router,
-    components: { App },
-    template: '<App/>'
-  })
+let vm = new Vue({
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>'
+})
 
+Vue.use({
+  vm
+})

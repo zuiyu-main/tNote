@@ -17,7 +17,7 @@ public class TestController {
     @Autowired
     private TestService testService;
     @RequestMapping("/hello")
-    public String hello(){
+    public Object hello(){
         return testService.hello();
     }
 }

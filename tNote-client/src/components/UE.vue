@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <script id="editor" type="text/plain"></script>
-    </div>
+  <div>
+    <script id="editor" type="text/plain"></script>
+  </div>
 </template>
 <script>
 export default {
@@ -16,7 +16,7 @@ export default {
     config: {}
   },
   mounted () {
-    this.editor = window.UE.getEditor('editor', this.config);
+    this.editor = window.UE.getEditor('editor', this.config)
     this.editor.addListener('ready', () => {
       this.editor.setContent(this.value)
     })

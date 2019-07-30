@@ -16,11 +16,10 @@ import org.springframework.stereotype.Service;
 public class TestServiceImpl implements TestService {
     @Autowired
     private TestTaMapper testTaMapper;
-
     @Override
-    public String hello() {
+    public Object hello() {
         TestTa testTa = testTaMapper.selectByPrimaryKey("1");
 
-        return testTa.toString();
+        return testTa;
     }
 }
