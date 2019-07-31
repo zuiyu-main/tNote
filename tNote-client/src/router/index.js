@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Editor from '@/components/editor'
+import markdown from '@/components/markdown'
 import UEdit from '@/components/UEdit'
 Vue.use(Router)
 
@@ -9,7 +9,7 @@ export default new Router({
     {
       path: '/',
       name: 'Editor',
-      component: Editor
+      component: markdown
     }, {
       path: '/uedit/edit',
       name: 'uedit',
@@ -18,7 +18,7 @@ export default new Router({
     {
       path: '/markdown',
       name: 'Editor',
-      component: Editor
+      component: markdown
     }
   ]
 })

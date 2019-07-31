@@ -1,6 +1,4 @@
-/**
-markdown
- */
+
  <template>
   <div id="base">
     <div id="editor">
@@ -24,6 +22,7 @@ export default {
   data () {
     return { value: 'Please enter the content...' }
   },
+
   methods: {
     // 绑定@imgAdd event
     $imgAdd (pos, $file) {

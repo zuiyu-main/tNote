@@ -8,16 +8,16 @@
           </template>
           <el-menu-item-group>
             <template slot="title" ref="Uedit">编辑模式</template>
-            <el-menu-item index="1-1" @click="goFullText">富本文</el-menu-item>
-            <el-menu-item index="1-2" @click="goMarkDown">markdown</el-menu-item>
+            <el-menu-item index="1-1" @click="goFullText()">富本文</el-menu-item>
+            <el-menu-item index="1-2" @click="goMarkDown()">markdown</el-menu-item>
           </el-menu-item-group>
-          <!-- <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-          </el-submenu>-->
+          <el-menu-item-group title="分组2">
+            <el-menu-item index="1-3" @click="goSocket()">socket</el-menu-item>
+          </el-menu-item-group>
+          <el-submenu index="1-4">
+            <template slot="title">选项4</template>
+            <el-menu-item index="1-4-1">选项4-1</el-menu-item>
+          </el-submenu>
         </el-submenu>
         <!-- <el-submenu index="2">
         <template slot="title"><i class="el-icon-menu"></i>导航二</template>
@@ -82,6 +82,7 @@
 </template>
 
 <script>
+// import socket from '@/api/socket'
 export default {
   data () {
     const item = {
@@ -94,12 +95,21 @@ export default {
     }
   },
   methods: {
-    goFullText: function () {
+    goFullText () {
       this.$router.push({ path: '/uedit/edit' })
     },
-    goMarkDown: function () {
+    goMarkDown () {
       this.$router.push({ path: '/markdown' })
+    },
+    goSocket () {
+      this.$router.push({ path: '/socket' })
+    },
+    getConfigResult (message) {
+      console.log('回调函数', message)
     }
+  },
+  mounted () {
+    this.socketApi.sendSock('测试websocket', this.getConfigResult)
   }
 }
 </script>

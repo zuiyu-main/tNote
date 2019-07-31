@@ -1,6 +1,4 @@
-/**
-富文本
- */
+
 <template>
   <div>
     <Uediter :value="ueditor.value" :config="ueditor.config" ref="ue"></Uediter>
