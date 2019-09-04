@@ -1,7 +1,7 @@
 var UUID = require('uuid')
 var websock = null
 var globalCallback = null
-var serverPort = '8081'
+var serverPort = '2000'
 var CLIENTID = UUID.v4()
 // webSocket连接端口
 

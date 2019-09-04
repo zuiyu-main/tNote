@@ -4,9 +4,7 @@
     <div id="editor">
       <mavon-editor ref="md" style="height:100%" v-model="value"></mavon-editor>
     </div>
-    <!-- <div id="demo">
-            @imgAdd="$imgAdd" @imgDel="$imgDel"
-    </div>-->
+    <!-- <div id="demo">@imgAdd="$imgAdd" @imgDel="$imgDel"</div> -->
   </div>
 </template>
 <script>

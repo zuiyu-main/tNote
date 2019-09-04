@@ -24,7 +24,6 @@ public class TestTa {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "last_modify_time")
     private Date lastModifyTime;
-
     @Column(name = "text_blog")
     private String textBlog;
 }

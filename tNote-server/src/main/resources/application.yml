@@ -1,8 +1,13 @@
 server:
-  port: 8081
+  port: 2000
 
 #数据源配置
 spring:
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      uri: mongodb://localhost/tNote
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource #Druid连接池
     url: jdbc:mysql://localhost:3306/mynote?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&nullCatalogMeansCurrent=true
@@ -34,6 +39,8 @@ mapper:
 logging:
   level:
     com.tz.mynote: debug
+  file: log/tNote-server.log
+
 # 分页插件
 pagehelper:
   reasonable: true
