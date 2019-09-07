@@ -13,7 +13,7 @@ public class NoteContent {
     private String id;
     private String title;
     private String content;
-    private String create;
+    private String author;
     private String gmtCreate;
     private String gmtModified;
     private Integer deleted;

@@ -30,7 +30,7 @@ public class NoteContentServiceImpl implements NoteContentService {
         content.setId(UUID.randomUUID().toString());
         content.setTitle("test");
         content.setContent("测试mongodb联通");
-        content.setCreate("1");
+        content.setAuthor("田子");
         content.setDeleted(0);
         content.setGmtCreate(DateUtils.getDate("yyyy-MM-dd HH:mm:ss"));
         content.setGmtModified(DateUtils.getDate("yyyy-MM-dd HH:mm:ss"));
