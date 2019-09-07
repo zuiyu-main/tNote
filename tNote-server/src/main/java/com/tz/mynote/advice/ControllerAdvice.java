@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ControllerAdvice {
     @ExceptionHandler(value = Exception.class)
     public ResultBean errorHandler(Exception e){
+        e.printStackTrace();
         return  ResultBean.builder()
                 .msg(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())

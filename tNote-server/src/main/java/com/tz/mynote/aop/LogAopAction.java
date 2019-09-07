@@ -3,6 +3,7 @@ package com.tz.mynote.aop;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mongodb.util.JSON;
 import com.tz.mynote.annotation.OptionalLog;
+import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.bean.NoteLog;
 import com.tz.mynote.service.LogService;
 import com.tz.mynote.util.GsonUtil;
@@ -41,7 +42,8 @@ public class LogAopAction {
     private LogService logService;
 
     // 配置接入点，即为所要记录的action操作目录
-    @Pointcut("execution(public * com.tz.mynote.controller..*.*(..))")
+//    @Pointcut("execution(public * com.tz.mynote.controller..*.*(..))")
+    @Pointcut("@annotation(com.tz.mynote.annotation.OptionalLog)")
     private void controllerAspect() {
     }
 
@@ -121,70 +123,73 @@ public class LogAopAction {
         }
         if (null != method) {
             // 获取方法（此为自定义注解）
-            OptionalLog op = method.getAnnotation(OptionalLog.class);
+            if (method.isAnnotationPresent(OptionalLog.class)) {
+                OptionalLog op = method.getAnnotation(OptionalLog.class);
 
-            // 获取注解的modules 设为操作模块
-            noteLog.setModule(op.module());
-            // 获取注解的methods 设为执行方法
-            noteLog.setMethods(op.methods());
-            // 将上面获取到的请求路径 设为请求路径
-            noteLog.setActionUrl(actionUrl);
-            try {
-                object = pjp.proceed();
-                //接受客户端的数据
-                Map<String, String[]> map = request.getParameterMap();
-                 // 解决获取参数乱码
-                Map<String, String[]> newmap = new HashMap<String, String[]>();
-                for (Map.Entry<String, String[]> entry : map.entrySet()) {
-                    String name = entry.getKey();
-                    String values[] = entry.getValue();
-
-                    if (values == null) {
-                        newmap.put(name, new String[]{});
-                        continue;
-                    }
-                    String newvalues[] = new String[values.length];
-                    for (int i = 0; i < values.length; i++) {
-                        String value = values[i];
-                        value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
-                        newvalues[i] = value; //解决乱码后封装到Map中
-                    }
-
-                    newmap.put(name, newvalues);
-
-                }
-                noteLog.setContent(GsonUtil.toJson(newmap));
-                //1为执行成功
-                noteLog.setCommite((byte) 1);
-                // 添加到数据库
-                logService.save(noteLog);
-            } catch (Throwable e) {
+                // 获取注解的modules 设为操作模块
+                noteLog.setModule(op.module());
+                // 获取注解的methods 设为执行方法
+                noteLog.setMethods(op.methods());
+                // 将上面获取到的请求路径 设为请求路径
+                noteLog.setActionUrl(actionUrl);
+                try {
+                    object = pjp.proceed();
                     //接受客户端的数据
-                Map<String, String[]> map = request.getParameterMap();
-                 // 解决获取参数乱码
-                Map<String, String[]> newmap = new HashMap<String, String[]>();
-                for (Map.Entry<String, String[]> entry : map.entrySet()) {
-                    String name = entry.getKey();
-                    String values[] = entry.getValue();
+                    Map<String, String[]> map = request.getParameterMap();
+                    // 解决获取参数乱码
+                    Map<String, String[]> newmap = new HashMap<String, String[]>();
+                    for (Map.Entry<String, String[]> entry : map.entrySet()) {
+                        String name = entry.getKey();
+                        String values[] = entry.getValue();
 
-                    if (values == null) {
-                        newmap.put(name, new String[]{});
-                        continue;
+                        if (values == null) {
+                            newmap.put(name, new String[]{});
+                            continue;
+                        }
+                        String newvalues[] = new String[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            String value = values[i];
+                            value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
+                            newvalues[i] = value; //解决乱码后封装到Map中
+                        }
+
+                        newmap.put(name, newvalues);
+
                     }
-                    String newvalues[] = new String[values.length];
-                    for (int i = 0; i < values.length; i++) {
-                        String value = values[i];
-                        value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
-                        newvalues[i] = value; //解决乱码后封装到Map中
+                    noteLog.setContent(GsonUtil.toJson(newmap));
+                    //1为执行成功
+                    noteLog.setCommite((byte) 1);
+                    // 添加到数据库
+                    logService.save(noteLog);
+                } catch (Throwable e) {
+                    //接受客户端的数据
+                    Map<String, String[]> map = request.getParameterMap();
+                    // 解决获取参数乱码
+                    Map<String, String[]> newmap = new HashMap<String, String[]>();
+                    for (Map.Entry<String, String[]> entry : map.entrySet()) {
+                        String name = entry.getKey();
+                        String values[] = entry.getValue();
+
+                        if (values == null) {
+                            newmap.put(name, new String[]{});
+                            continue;
+                        }
+                        String newvalues[] = new String[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            String value = values[i];
+                            value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
+                            newvalues[i] = value; //解决乱码后封装到Map中
+                        }
+                        newmap.put(name, newvalues);
                     }
-                    newmap.put(name, newvalues);
+                    noteLog.setContent(GsonUtil.toJson(newmap));
+                    //2为执行失败
+                    noteLog.setCommite((byte) 2);
+                    //添加到数据库
+                    logService.save(noteLog);
                 }
-                noteLog.setContent(GsonUtil.toJson(newmap));
-                //2为执行失败
-                noteLog.setCommite((byte) 2);
-              //添加到数据库
-                logService.save(noteLog);
             }
+
         }
         return object;
     }

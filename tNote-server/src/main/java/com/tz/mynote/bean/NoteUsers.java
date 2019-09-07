@@ -2,9 +2,16 @@ package com.tz.mynote.bean;
 
 import java.util.Date;
 import javax.persistence.*;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "note_users")
 public class NoteUsers {
     @Id
@@ -55,4 +62,5 @@ public class NoteUsers {
      * 删除标记（1，删除，0 正常）默认0
      */
     private Byte deleted;
+
 }
