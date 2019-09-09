@@ -8,6 +8,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/tNote
+      port: 27017
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource #Druid连接池
     url: jdbc:mysql://localhost:3306/mynote?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&nullCatalogMeansCurrent=true
