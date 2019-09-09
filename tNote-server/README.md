@@ -16,3 +16,5 @@ ip： localhost
 库名： tNote
 # 启动
 环境连接好，启动MyNoteApplication即可
+# swagger文档访问
+http://localhost:2000/swagger-ui.html
