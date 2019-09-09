@@ -23,7 +23,7 @@ CREATE TABLE `note_users` (
                               `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改日期',
                               `deleted` tinyint(2) NOT NULL DEFAULT '0' COMMENT '删除标记（1，删除，0 正常）默认0',
                               PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /**
   org机构表 sql
  */

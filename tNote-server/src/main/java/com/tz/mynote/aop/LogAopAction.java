@@ -37,7 +37,9 @@ import java.util.Map;
 @Component
 @Aspect
 public class LogAopAction {
-    // 注入service,用来将日志信息保存在数据库
+    /**
+     *     注入service,用来将日志信息保存在数据库
+      */
     @Autowired
     private LogService logService;
 
@@ -178,7 +180,8 @@ public class LogAopAction {
                         for (int i = 0; i < values.length; i++) {
                             String value = values[i];
                             value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
-                            newvalues[i] = value; //解决乱码后封装到Map中
+                            newvalues[i] = value;
+                            //解决乱码后封装到Map中
                         }
                         newmap.put(name, newvalues);
                     }
