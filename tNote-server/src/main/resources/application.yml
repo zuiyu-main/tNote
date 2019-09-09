@@ -3,6 +3,9 @@ server:
 
 #数据源配置
 spring:
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   main:
     allow-bean-definition-overriding: true
   data:

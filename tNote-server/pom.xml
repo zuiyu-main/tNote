@@ -116,6 +116,18 @@
             <artifactId>java-jwt</artifactId>
             <version>3.4.0</version>
         </dependency>
+        <!--swagger 文档注释-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <!--swagger-->
     </dependencies>
 
     <build>

@@ -1,5 +1,6 @@
 package com.tz.mynote.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.annotation.UserLoginToken;
@@ -36,9 +37,16 @@ public class NoteUserController {
                 return ResultBean.builder().msg("登录失败,密码错误").code(HttpStatus.OK.value()).build();
             }else {
                 String token = JwtUtil.getToken(noteUsers);
+                JSONObject object = new JSONObject();
+                object.put("id", noteUsers.getId());
+                object.put("realName",noteUsers.getRealName());
+                object.put("orgId",noteUsers.getOrgId());
+                object.put("userName",noteUsers.getUserName());
+                object.put("passWord",null);
+                object.put("createTime",noteUsers.getGmtCreate());
                 Map<String,Object> map = new HashMap<>(8);
                 map.put("token", token);
-                map.put("user", noteUsers);
+                map.put("user", object);
                 return ResultBean.builder().msg("登录成功").code(HttpStatus.OK.value()).data(map).build();
             }
         }
