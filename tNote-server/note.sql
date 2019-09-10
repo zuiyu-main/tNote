@@ -35,3 +35,18 @@ CREATE TABLE `mynote`.`note_organization` (
                                               `gmt_modified` DATETIME NOT NULL COMMENT '修改时间',
                                               `deleted` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '删除标记 0 正常1 删除',
                                               PRIMARY KEY (`id`));
+/**
+  note_log
+ */
+CREATE TABLE `note_log` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '操作日志id',
+                            `user_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作人',
+                            `module` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '执行模块',
+                            `methods` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '执行方法',
+                            `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作内容',
+                            `action_url` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求路径',
+                            `ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'IP地址',
+                            `gmt_create` datetime NOT NULL COMMENT '操作时间',
+                            `commite` tinyint(2) NOT NULL COMMENT '执行描述（1:执行成功、2:执行失败）',
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;

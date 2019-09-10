@@ -18,3 +18,10 @@ ip： localhost
 环境连接好，启动MyNoteApplication即可
 # swagger文档访问
 http://localhost:2000/swagger-ui.html
+# 模块介绍
+tNote-base 父模块，通用类，util，配置
+tNote-dao dao层，连接数据库
+tNote-entity 实体类
+tNote-service 服务
+tNote-web 访问层
+tNote-generator generator生成代码
