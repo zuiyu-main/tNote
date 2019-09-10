@@ -17,4 +17,5 @@
 ![image](https://github.com/TianPuJun/tNote/blob/more-module/tNote-server/tNote-generator/src/img/WX20190910-094829%402x.png)
 <table tableName="note_log"><generatedKey column="id" sqlStatement="JDBC"/></table>
 4. 运行maven插件
+
 ![image](https://github.com/TianPuJun/tNote/blob/more-module/tNote-server/tNote-generator/src/img/WX20190910-095137%402x.png)
