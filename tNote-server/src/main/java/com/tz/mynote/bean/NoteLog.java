@@ -55,5 +55,5 @@ public class NoteLog {
     /**
      * 执行描述（1:执行成功、2:执行失败）
      */
-    private Byte commite;
+    private Byte commit;
 }

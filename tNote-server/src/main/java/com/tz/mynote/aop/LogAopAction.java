@@ -57,8 +57,13 @@ public class LogAopAction {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest();
         // 从session获取用户名
-        String username = (String)request.getSession().getAttribute("user");
-        noteLog.setUserName("token获取");
+        String username =(String) request.getAttribute("user");
+//        String username = (String)request.getSession().getAttribute("user");
+        if(null == username){
+            noteLog.setUserName("用户名暂无，后续修改");
+        }else{
+            noteLog.setUserName(username);
+        }
         // 获取系统当前时间
         noteLog.setGmtCreate(new Date());
 
@@ -160,7 +165,7 @@ public class LogAopAction {
                     }
                     noteLog.setContent(GsonUtil.toJson(newmap));
                     //1为执行成功
-                    noteLog.setCommite((byte) 1);
+                    noteLog.setCommit((byte) 1);
                     // 添加到数据库
                     logService.save(noteLog);
                 } catch (Throwable e) {
@@ -187,7 +192,7 @@ public class LogAopAction {
                     }
                     noteLog.setContent(GsonUtil.toJson(newmap));
                     //2为执行失败
-                    noteLog.setCommite((byte) 2);
+                    noteLog.setCommit((byte) 2);
                     //添加到数据库
                     logService.save(noteLog);
                 }

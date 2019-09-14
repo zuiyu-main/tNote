@@ -9,11 +9,13 @@ import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.service.NoteUserService;
 import com.tz.mynote.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author tz
@@ -26,6 +28,8 @@ import java.util.Map;
 public class NoteUserController {
     @Autowired
     private NoteUserService noteUserService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @PostMapping("/login")
     @OptionalLog(module="用户", methods="登录接口")
     public ResultBean login( NoteUsers user){
@@ -44,6 +48,7 @@ public class NoteUserController {
                 object.put("userName",noteUsers.getUserName());
                 object.put("passWord",null);
                 object.put("createTime",noteUsers.getGmtCreate());
+                stringRedisTemplate.opsForValue().set(token,object.toString(),30,TimeUnit.MINUTES);
                 Map<String,Object> map = new HashMap<>(8);
                 map.put("token", token);
                 map.put("user", object);
@@ -55,5 +60,10 @@ public class NoteUserController {
     @GetMapping("/getMessage")
     public String getMessage(){
         return "你已通过验证";
+    }
+    @UserLoginToken
+    @GetMapping("/get")
+    public ResultBean get(){
+        return ResultBean.builder().data("sssss").msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).build();
     }
 }

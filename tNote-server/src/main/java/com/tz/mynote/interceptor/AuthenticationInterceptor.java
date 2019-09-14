@@ -5,11 +5,15 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.service.NoteUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,12 +28,17 @@ import java.lang.reflect.Method;
  * @Description 登录验证拦截器
  * @Date 2019-09-07 18:08
  */
+@Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private NoteUserService noteUserService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
+        String token = httpServletRequest.getHeader("token");
+        // 从 http 请求头中取出 token
+        log.info("请求token值读取=【{}】",token);
         // 如果不是映射到方法直接通过
         if(!(object instanceof HandlerMethod)){
             return true;
@@ -54,9 +63,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 // 获取 token 中的 user id
                 String userId;
                 try {
-                    userId = JWT.decode(token).getAudience().get(0);
+                    DecodedJWT jwt = JWT.decode(token);
+                    userId = jwt.getAudience().get(0);
+                    String userName = jwt.getClaim("userName").asString();
+                    httpServletRequest.setAttribute("user",userName);
+                    log.info("token 解析token = 【{}】， userId = 【{}】,userName = [{}]",JWT.decode(token).toString(),userId,userName);
                 } catch (JWTDecodeException j) {
                     throw new RuntimeException("401");
+                }
+                Boolean aBoolean = stringRedisTemplate.hasKey(token);
+                if (!aBoolean){
+                    throw new RuntimeException("token 过期，请重新登录");
                 }
                 NoteUsers user = noteUserService.findUserById(userId);
                 if (user == null) {

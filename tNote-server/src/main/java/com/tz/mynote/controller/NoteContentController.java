@@ -1,6 +1,7 @@
 package com.tz.mynote.controller;
 
 import com.tz.mynote.annotation.OptionalLog;
+import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.service.NoteContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class NoteContentController {
     private NoteContentService noteContentService;
     @OptionalLog(module="日记内容", methods="test测试接口")
     @GetMapping("/test")
+    @UserLoginToken
     public ResultBean test(){
         return noteContentService.test();
     }
