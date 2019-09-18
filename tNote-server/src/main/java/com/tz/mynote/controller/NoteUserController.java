@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,12 @@ public class NoteUserController {
             if (!noteUsers.getPassword().equals(user.getPassword())){
                 return ResultBean.builder().msg("登录失败,密码错误").code(HttpStatus.OK.value()).build();
             }else {
-                String token = JwtUtil.getToken(noteUsers);
+                String token = null;
+                try {
+                    token = JwtUtil.getToken(noteUsers);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 JSONObject object = new JSONObject();
                 object.put("id", noteUsers.getId());
                 object.put("realName",noteUsers.getRealName());
@@ -66,4 +72,9 @@ public class NoteUserController {
     public ResultBean get(){
         return ResultBean.builder().data("sssss").msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).build();
     }
+    @PostMapping("/register")
+    public ResultBean register(){
+        return null;
+    }
+
 }
