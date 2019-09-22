@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.bean.NoteUsers;
+import com.tz.mynote.constant.Login;
 import com.tz.mynote.service.NoteUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private StringRedisTemplate stringRedisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        String token = httpServletRequest.getHeader("token");
+        String token = httpServletRequest.getHeader(Login.AUTHORIZATION);
         // 从 http 请求头中取出 token
         log.info("请求token值读取=【{}】",token);
         // 如果不是映射到方法直接通过

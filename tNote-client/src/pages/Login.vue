@@ -24,7 +24,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit">登录</el-button>
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -34,10 +34,11 @@
 </template>
 
 <script>
+import { userLogin } from '@/api/user/login'
 export default {
   name: 'login',
   components: {},
-  data() {
+  data () {
     return {
       // 控制播放视频
       vedioCanPlay: false,
@@ -50,14 +51,24 @@ export default {
     }
   },
   methods: {
-    canplay() {
+    canplay () {
       this.vedioCanPlay = true
     },
-    onSubmit() {
+    onSubmit () {
       console.log('submit!', this.form)
+      const params = {
+        userName: this.form.name,
+        password: this.form.password
+      }
+      userLogin(params).then(res => {
+        if (res.code === 200) {
+          localStorage.setItem('token', res.data.token)
+          localStorage.setItem('userInfo', res.data.user)
+        }
+      })
     }
   },
-  mounted: function() {
+  mounted: function () {
     window.onresize = () => {
       const windowWidth = document.body.clientWidth
       const windowHeight = document.body.clientHeight
@@ -88,7 +99,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style >
 .homepage-hero-module,
 .video-container {
   position: relative;
@@ -112,5 +123,8 @@ export default {
   top: 33%;
   left: 37%;
   z-index: 1;
+}
+.el-form-item__label {
+  color: aliceblue !important;
 }
 </style>

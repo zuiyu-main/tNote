@@ -1,6 +1,10 @@
 package com.tz.mynote.service;
 
 import com.tz.mynote.bean.NoteUsers;
+import com.tz.mynote.bean.VO.NoteUsersVO;
+import com.tz.mynote.common.bean.ResultBean;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author tz
@@ -13,4 +17,7 @@ public interface NoteUserService {
 
     NoteUsers findByUserName(NoteUsers user);
 
+    ResultBean login(HttpServletRequest request, NoteUsersVO noteUsersVO);
+
+    ResultBean register(HttpServletRequest request, NoteUsersVO noteUsersVO);
 }

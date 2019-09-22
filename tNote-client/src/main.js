@@ -12,7 +12,10 @@ import '../static/UE/ueditor.config.js'
 import '../static/UE/ueditor.all.min.js'
 import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
-import * as socketApi from './api/socket/WebSocket'
+import * as socketApi from './utils/socket/WebSocket'
+import { post, get } from '@/utils/request/axios'
+Vue.prototype.$post = post
+Vue.prototype.$get = get
 Vue.prototype.socketApi = socketApi
 Vue.use(ElementUI)
 Vue.config.productionTip = false
