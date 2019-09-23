@@ -9,8 +9,7 @@ function getWebIP () {
   var curIP = window.location.hostname
   return curIP
 }
-
-function initWebSocket () { // 初始化weosocket
+export function initWebSocket () { // 初始化weosocket
   // ws地址
   var wsuri = 'ws://' + getWebIP() + ':' + serverPort + '/websocket/' + CLIENTID
   websock = new WebSocket(wsuri)
@@ -51,6 +50,9 @@ function sendSock (agentData, callback) {
 
 // 数据接收
 function websocketonmessage (e) {
+  if (globalCallback === null) {
+    return
+  }
   globalCallback(JSON.parse(e.data))
 }
 
@@ -68,6 +70,6 @@ function websocketOpen (e) {
   console.log('连接成功,客户端id', CLIENTID)
 }
 
-initWebSocket()
+// initWebSocket()
 
 export { sendSock }

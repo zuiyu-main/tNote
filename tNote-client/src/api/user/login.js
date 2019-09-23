@@ -7,3 +7,10 @@ import { request } from '@/utils/request/axios.js'
 export function userLogin (data) {
   return request('post', '/user/login', data)
 }
+/**
+ * 注册
+ * @param {z} data
+ */
+export function userRegister (data) {
+  return request('post', '/user/register', data)
+}

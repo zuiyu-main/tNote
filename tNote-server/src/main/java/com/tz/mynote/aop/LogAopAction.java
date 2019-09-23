@@ -5,8 +5,10 @@ import com.mongodb.util.JSON;
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.bean.NoteLog;
+import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.service.LogService;
 import com.tz.mynote.util.GsonUtil;
+import com.tz.mynote.util.LoginInfoUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -42,6 +44,8 @@ public class LogAopAction {
       */
     @Autowired
     private LogService logService;
+    @Autowired
+    private LoginInfoUtil loginInfoUtil;
 
     // 配置接入点，即为所要记录的action操作目录
 //    @Pointcut("execution(public * com.tz.mynote.controller..*.*(..))")
@@ -60,7 +64,7 @@ public class LogAopAction {
         String username =(String) request.getAttribute("user");
 //        String username = (String)request.getSession().getAttribute("user");
         if(null == username){
-            noteLog.setUserName("用户名暂无，后续修改");
+            noteLog.setUserName("未查找到用户名");
         }else{
             noteLog.setUserName(username);
         }

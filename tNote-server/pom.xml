@@ -128,6 +128,12 @@
             <version>2.7.0</version>
         </dependency>
         <!--swagger-->
+        <!--参数检验-->
+        <!--参数检验-->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

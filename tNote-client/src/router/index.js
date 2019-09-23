@@ -1,33 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import markdown from '@/components/markdown'
-import UEdit from '@/components/UEdit'
-import Index from '@/pages/MyIndex'
-import Login from '@/pages/Login'
 Vue.use(Router)
-
+// https://juejin.im/post/5b5bfd5b6fb9a04fdd7d687a
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'login',
-      component: Login
+      component: () => import('@/pages/login/Login')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/pages/login/register')
     },
     {
       path: '/edit',
       name: 'myIndex',
-      component: Index,
+      component: () => import('@/pages/MyIndex'),
       redirect: '/markdown',
       children: [
         {
           path: '/uedit/edit',
           name: 'uedit',
-          component: UEdit
+          component: () => import('@/components/UEdit')
         },
         {
           path: '/markdown',
           name: 'Editor',
-          component: markdown
+          component: () => import('@/components/markdown')
         }
       ]
     }

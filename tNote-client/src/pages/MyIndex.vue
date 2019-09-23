@@ -112,8 +112,9 @@ export default {
     }
   },
   mounted () {
-    this.socketApi.sendSock('测试websocket', this.getConfigResult)
-  }
+    // this.socketApi.sendSock('测试websocket', this.getConfigResult)
+  },
+  destroyed () {}
 }
 </script>
 <style>

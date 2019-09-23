@@ -7,15 +7,19 @@ import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.bean.VO.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
+import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.service.NoteUserService;
 import com.tz.mynote.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,12 @@ public class NoteUserController {
     @Autowired
     private NoteUserService noteUserService;
 
+    /**
+     * 登录
+     * @param request
+     * @param noteUsersVO
+     * @return
+     */
     @PostMapping("/login")
     @PassToken
     @OptionalLog(module="用户", methods="登录接口")
@@ -56,8 +66,9 @@ public class NoteUserController {
      * @param noteUsersVO
      * @return
      */
+    @PassToken
     @PostMapping("/register")
-    public ResultBean register(HttpServletRequest request,@RequestBody NoteUsersVO noteUsersVO){
+    public ResultBean register(HttpServletRequest request, @RequestBody @Validated(SaveService.class) NoteUsersVO noteUsersVO, BindingResult bindingResult){
         return noteUserService.register(request,noteUsersVO);
     }
 

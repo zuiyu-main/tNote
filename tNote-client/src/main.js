@@ -20,6 +20,18 @@ Vue.prototype.socketApi = socketApi
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.use(mavonEditor)
+router.beforeEach((to, from, next) => {
+  if (to.fullPath !== '/') {
+    if (localStorage.getItem('token') === null) {
+      next({
+        path: '/'
+      })
+      return
+    }
+  }
+
+  next()
+})
 let vm = new Vue({
   el: '#app',
   router,

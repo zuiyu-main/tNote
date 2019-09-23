@@ -3,11 +3,12 @@
     <div class="video-container">
       <div :style="fixStyle" class="filter"></div>
       <video :style="fixStyle" autoplay loop class="fillWidth" v-on:canplay="canplay">
-        <source src="../video/MP4/Sunset-Siesta.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
-        <source src="../video/WEBM/Sunset-Siesta.webm" type="video/webm" />浏览器不支持 video 标签，建议升级浏览器。
+        <source src="@/video/MP4/Sunset-Siesta.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
+        <source src="@/video/WEBM/Sunset-Siesta.webm" type="video/webm" />浏览器不支持 video 标签，建议升级浏览器。
       </video>
-      <div class="poster hidden" v-if="!vedioCanPlay">
-        <img :style="fixStyle" src="../video/Snapshots/Sunset-Siesta.jpg" alt />
+      <!-- 此处 v-if="！vedioCanPlay" 可以播放视频，但是贼热-->
+      <div class="poster hidden" v-if="vedioCanPlay">
+        <img :style="fixStyle" src="@/video/Snapshots/Sunset-Siesta.jpg" alt />
       </div>
       <div class="login-form">
         <el-form ref="form" :model="form" label-width="80px">
@@ -25,7 +26,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">登录</el-button>
-            <el-button>取消</el-button>
+            <el-button @click="register">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -41,19 +42,35 @@ export default {
   data () {
     return {
       // 控制播放视频
-      vedioCanPlay: false,
+      vedioCanPlay: true,
       fixStyle: '',
       form: {
-        name: '',
-        password: '',
-        resource: ''
-      }
+        name:
+          JSON.parse(localStorage.getItem('loginInfo')) === null
+            ? ''
+            : JSON.parse(localStorage.getItem('loginInfo')).userName,
+        password:
+          JSON.parse(localStorage.getItem('loginInfo')) === null
+            ? ''
+            : JSON.parse(localStorage.getItem('loginInfo')).password,
+        resource:
+          JSON.parse(localStorage.getItem('loginInfo')) === null
+            ? ''
+            : JSON.parse(localStorage.getItem('loginInfo')).resource
+      },
+      autoLogin: false
     }
   },
   methods: {
+    /**
+     * 视频背景页面播放
+     */
     canplay () {
       this.vedioCanPlay = true
     },
+    /**
+     * 提交登录请求
+     */
     onSubmit () {
       console.log('submit!', this.form)
       const params = {
@@ -63,9 +80,22 @@ export default {
       userLogin(params).then(res => {
         if (res.code === 200) {
           localStorage.setItem('token', res.data.token)
-          localStorage.setItem('userInfo', res.data.user)
+          localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+          const loginInfo = {
+            userName: this.form.name,
+            password: this.form.password,
+            resource: this.form.resource
+          }
+          localStorage.setItem('loginInfo', JSON.stringify(loginInfo))
+          this.$router.push({ path: '/edit' })
         }
       })
+    },
+    /**
+     * 注册跳转
+     */
+    register () {
+      this.$router.push('/register')
     }
   },
   mounted: function () {
@@ -96,6 +126,10 @@ export default {
       }
     }
     window.onresize()
+    // 自动登录
+    if (this.form.resource === '自动登录') {
+      this.onSubmit()
+    }
   }
 }
 </script>

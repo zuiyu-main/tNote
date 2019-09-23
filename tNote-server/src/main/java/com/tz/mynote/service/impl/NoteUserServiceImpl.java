@@ -47,7 +47,7 @@ public class NoteUserServiceImpl implements NoteUserService {
     @Override
     public NoteUsers findByUserName(NoteUsers user) {
         NoteUsers users = new NoteUsers();
-        user.setUserName(user.getUserName());
+        users.setUserName(user.getUserName());
         return noteUsersMapper.selectOne(users);
     }
 
@@ -87,9 +87,30 @@ public class NoteUserServiceImpl implements NoteUserService {
         }
     }
 
+    /**
+     * 注册
+     * 1。 查询是否有账号存在
+     * 2。 校验两次输入密码是否一致
+     * 3。 加密密码注册
+     * @param request
+     * @param noteUsersVO
+     * @return
+     */
     @Override
     public ResultBean register(HttpServletRequest request, NoteUsersVO noteUsersVO) {
+
         NoteUsers noteUsers = new NoteUsers();
+        noteUsers.setUserName(noteUsersVO.getUserName());
+        NoteUsers byUserName = noteUsersMapper.selectOne(noteUsers);
+        if(null != byUserName){
+            log.info("注册用户名失败，用户名重复，输入用户名=[{}]",byUserName.getUserName());
+            return ResultBean.builder().code(HttpStatus.RESET_CONTENT.value()).msg("用户名重复,请更换用户名重新注册").build();
+        }
+        boolean checkTwoPassWord = noteUsersVO.getPassword().equals(noteUsersVO.getPassword2());
+        if(!checkTwoPassWord){
+            log.info("注册失败，两次密码输入不一致，请验证之后重新输入 ，[{}]-[{}]",noteUsersVO.getPassword(),noteUsersVO.getPassword2());
+            return ResultBean.builder().code(HttpStatus.RESET_CONTENT.value()).msg("两次密码输入不一致，请验证之后重新输入").build();
+        }
         copier.copy(noteUsersVO,noteUsers,null);
         noteUsers.setSlat(Long.toString(System.currentTimeMillis()));
         String saltPassWord = PasswordUtil.generate(noteUsersVO.getPassword() + noteUsers.getSlat());
