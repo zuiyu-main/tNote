@@ -87,7 +87,7 @@ export default {
             resource: this.form.resource
           }
           localStorage.setItem('loginInfo', JSON.stringify(loginInfo))
-          this.$router.push({ path: '/edit' })
+          this.$router.push({ path: '/index' })
         }
       })
     },

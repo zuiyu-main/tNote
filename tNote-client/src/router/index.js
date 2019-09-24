@@ -3,17 +3,34 @@ import Router from 'vue-router'
 Vue.use(Router)
 // https://juejin.im/post/5b5bfd5b6fb9a04fdd7d687a
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
+      name: '/',
+      component: () => import('@/pages/login/Login')
+    },
+    {
+      path: '/login',
       name: 'login',
       component: () => import('@/pages/login/Login')
+    },
+    {
+      path: '/index',
+      name: 'diary',
+      component: () => import('@/pages/diary/PrivateDiary')
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('@/pages/login/register')
     },
+    {
+      path: '/404',
+      name: 'notFound',
+      component: () => import('@/pages/404/NotFound')
+    },
+
     {
       path: '/edit',
       name: 'myIndex',
@@ -28,9 +45,14 @@ export default new Router({
         {
           path: '/markdown',
           name: 'Editor',
-          component: () => import('@/components/markdown')
+          component: () => import('@/components/MarkDown')
         }
+
       ]
+    },
+    {
+      path: '*', // 此处需特别注意置于最底部
+      redirect: '/404'
     }
   ]
 })
