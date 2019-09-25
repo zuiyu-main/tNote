@@ -32,7 +32,7 @@ public class LoginInfoUtil {
      */
     public NoteUsers getLoginInfo(HttpServletRequest request){
         try {
-            String token = (String)request.getAttribute(Login.AUTHORIZATION);
+            String token = request.getHeader(Login.AUTHORIZATION);
             DecodedJWT jwt = JWT.decode(token);
             String  userId = jwt.getAudience().get(0);
             NoteUsers user = noteUserService.findUserById(userId);
@@ -41,6 +41,9 @@ public class LoginInfoUtil {
         } catch (JWTDecodeException j) {
             log.error("token获取登录信息出错，错误信息={}",j.getMessage());
             throw new RuntimeException("401");
+        } catch (NullPointerException e){
+            log.error("token获取登录信息出错,token为空，错误信息={}",e.getMessage());
+            throw new RuntimeException("404");
         }
     }
 }

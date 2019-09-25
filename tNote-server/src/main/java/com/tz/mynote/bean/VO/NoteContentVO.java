@@ -1,31 +1,30 @@
-package com.tz.mynote.bean.mongo;
+package com.tz.mynote.bean.VO;
 
+import com.tz.mynote.common.dao.SaveService;
+import com.tz.mynote.common.dao.UpdateService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * @author tz
  * @Classname NoteContent
  * @Description mongo对应内容model
- * @url https://blog.csdn.net/tianyaleixiaowu/article/details/73530679
  * @Date 2019-09-03 14:33
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="NoteContent")
-public class NoteContent {
-    @Id
-    private Long id;
+public class NoteContentVO {
+    @NotNull(message = "id must not be null",groups = UpdateService.class)
+    private String id;
     /**
      * 标题
      */
+    @NotNull(message = "title must not be null",groups = SaveService.class)
     private String title;
     /**
      * 内容
@@ -34,13 +33,12 @@ public class NoteContent {
     /**
      * 类型 0 笔记，1 类别
      */
-    @Indexed
+    @NotNull(message = "type must not be null",groups = SaveService.class)
     private Integer type;
     /**
      * 父id，即所属类别
      */
-    @Indexed
-    private Long itemId;
+    private String itemId;
     /**
      * 创建人
      */
@@ -48,8 +46,7 @@ public class NoteContent {
     /**
      * 创建人id
      */
-    @Indexed
-    private Long authorId;
+    private String authorId;
     /**
      * 创建时间
      */

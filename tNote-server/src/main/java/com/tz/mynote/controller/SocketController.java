@@ -19,12 +19,16 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/checkCenter")
 public class SocketController {
-    //页面请求
+    /**
+     *     页面请求
+     */
     @GetMapping("/socket/{cid}")
     public Object socket(@PathVariable String cid) {
         return cid;
     }
-    //推送数据接口
+    /**
+     *     推送数据接口
+     */
     @RequestMapping("/socket/push/{cid}")
     public Object pushToWeb(@PathVariable String cid,String message) {
         try {

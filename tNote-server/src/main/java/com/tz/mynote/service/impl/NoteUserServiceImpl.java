@@ -52,7 +52,7 @@ public class NoteUserServiceImpl implements NoteUserService {
     }
 
     @Override
-    public ResultBean login(HttpServletRequest request, NoteUsersVO noteUsersVO) {
+    public ResultBean  login(HttpServletRequest request, NoteUsersVO noteUsersVO) {
         log.debug("用户登录，登录信息={}",noteUsersVO.toString());
         NoteUsers user = new NoteUsers();
         copier.copy(noteUsersVO,user,null);

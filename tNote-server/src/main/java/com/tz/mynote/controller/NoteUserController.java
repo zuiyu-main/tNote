@@ -68,6 +68,7 @@ public class NoteUserController {
      */
     @PassToken
     @PostMapping("/register")
+    @OptionalLog(module="用户", methods="注册接口")
     public ResultBean register(HttpServletRequest request, @RequestBody @Validated(SaveService.class) NoteUsersVO noteUsersVO, BindingResult bindingResult){
         return noteUserService.register(request,noteUsersVO);
     }
