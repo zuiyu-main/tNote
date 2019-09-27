@@ -1,7 +1,7 @@
 
 <template>
-  <div>
-    <Uediter :value="ueditor.value" :config="ueditor.config" ref="ue"></Uediter>
+  <div class="hei">
+    <Uediter class="hei" :value="ueditor.value" :config="ueditor.config" ref="ue"></Uediter>
     <el-button @click="returnContent">显示编辑器内容</el-button>
     <div>{{dat.content}}</div>
   </div>
@@ -12,15 +12,16 @@ import Uediter from '@/components/UE.vue'
 export default {
   data () {
     return {
+      hei: '100%',
       dat: {
         content: ''
       },
       ueditor: {
-        value: 'Please enter the content...',
-        config: {
-          initialFrameWidth: 800,
-          initialFrameHeight: 320
-        }
+        value: 'Please enter the content...'
+        // config: {
+        //   initialFrameWidth: 800,
+        //   initialFrameHeight: 500
+        // }
       }
     }
   },
@@ -36,7 +37,9 @@ export default {
 }
 </script>
 <style>
-/* {
-    width: 100% !important;
-} */
+#edui1,
+#editor,
+#edui1_iframeholder {
+  height: 100% !important;
+}
 </style>

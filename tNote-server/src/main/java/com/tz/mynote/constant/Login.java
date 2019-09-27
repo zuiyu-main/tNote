@@ -8,4 +8,6 @@ package com.tz.mynote.constant;
  */
 public class Login {
     public static final String AUTHORIZATION = "Authorization";
+    public static final String WEBSOCKET_ID = "wsId";
+
 }

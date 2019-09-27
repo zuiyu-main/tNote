@@ -15,8 +15,12 @@ var instance = axios.create({
 instance.interceptors.request.use(config => {
   // 在发送请求之前做些什么，比如传token
   const token = localStorage.getItem('token')
+  const wsId = sessionStorage.getItem('wsId')
   if (token) {
     config.headers.Authorization = token
+  }
+  if (wsId) {
+    config.headers.wsId = wsId
   }
   config.data = JSON.stringify(config.data)
   return config

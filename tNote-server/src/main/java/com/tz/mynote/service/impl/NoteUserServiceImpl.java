@@ -1,14 +1,18 @@
 package com.tz.mynote.service.impl;
 
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.bean.VO.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
+import com.tz.mynote.constant.Login;
+import com.tz.mynote.constant.RedisKey;
 import com.tz.mynote.dao.NoteUsersMapper;
 import com.tz.mynote.service.NoteUserService;
 import com.tz.mynote.util.JwtUtil;
 import com.tz.mynote.util.PasswordUtil;
+import com.tz.mynote.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +42,6 @@ public class NoteUserServiceImpl implements NoteUserService {
     private NoteUsersMapper noteUsersMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
     private static BeanCopier copier = BeanCopier.create(NoteUsersVO.class,NoteUsers.class,false);
     @Override
     public NoteUsers findUserById(String userId) {
@@ -70,7 +74,7 @@ public class NoteUserServiceImpl implements NoteUserService {
                 } catch (UnsupportedEncodingException e) {
                     log.error("生成token出错，错误信息=[{}]", e.getMessage());
                 }
-                request.setAttribute("Authorization", token);
+//                request.setAttribute("Authorization", token);
                 JSONObject object = new JSONObject();
                 object.put("id", noteUsers.getId());
                 object.put("realName", noteUsers.getRealName());
@@ -78,12 +82,40 @@ public class NoteUserServiceImpl implements NoteUserService {
                 object.put("userName", noteUsers.getUserName());
                 object.put("passWord", null);
                 object.put("createTime", noteUsers.getGmtCreate());
-                stringRedisTemplate.opsForValue().set(token, object.toString(), 30, TimeUnit.MINUTES);
+                object.put("wsId",request.getHeader(Login.WEBSOCKET_ID));
+                // 踢出其它客户端
+                try {
+                    checkIsLoginAndKick(RedisKey.LOGIN_KEY+noteUsers.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    log.error("用户踢出上一个客户端失败，redisKey={}",RedisKey.LOGIN_KEY+noteUsers.getId());
+                }
+                stringRedisTemplate.opsForValue().set(RedisKey.LOGIN_KEY+noteUsers.getId(), object.toString(), 30, TimeUnit.MINUTES);
                 Map<String, Object> map = new HashMap<>(8);
                 map.put("token", token);
                 map.put("user", object);
                 return ResultBean.builder().msg("登录成功").code(HttpStatus.OK.value()).data(map).build();
             }
+        }
+    }
+
+    /**
+     * 校验是否登录
+     * @param key
+     * @return
+     */
+    private void checkIsLoginAndKick(String key) throws IOException {
+        Boolean aBoolean = stringRedisTemplate.hasKey(key);
+        log.info("检测用户是否登录，check redisKey={}",aBoolean);
+        if(aBoolean){
+            String val = stringRedisTemplate.opsForValue().get(key);
+            JSONObject object = JSONObject.parseObject(val, JSONObject.class);
+            String wsId = object.getString("wsId");
+            log.info("检测用户客户端id={}",wsId);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("msg","logout");
+            jsonObject.put("status",-1);
+            WebSocketServer.sendInfo(jsonObject.toJSONString(),wsId);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.tz.mynote.websocket;
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.tz.mynote.common.bean.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -44,9 +46,10 @@ public class WebSocketServer {
         log.info("有新窗口开始监听:"+sid+",当前在线人数为" + getOnlineCount());
         this.sid=sid;
         try {
-            sendMessage("{\n" +
-                    "\t\"msg\": \"success\"\n" +
-                    "}");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("msg","success");
+            jsonObject.put("status",200);
+            sendMessage(jsonObject.toJSONString());
         } catch (IOException e) {
             log.error("websocket IO异常");
         }

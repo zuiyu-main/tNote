@@ -68,8 +68,9 @@ function websocketclose (e) {
 
 function websocketOpen (e) {
   console.log('连接成功,客户端id', CLIENTID)
+  sessionStorage.setItem('wsId', CLIENTID)
 }
 
-// initWebSocket()
+initWebSocket()
 
 export { sendSock }

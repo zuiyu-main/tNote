@@ -18,12 +18,17 @@ export default new Router({
     {
       path: '/index',
       name: 'diary',
-      component: () => import('@/pages/diary/PrivateDiary')
+      component: () => import('@/pages/MyIndex')
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('@/pages/login/register')
+    },
+    {
+      path: '/create',
+      name: 'create',
+      component: () => import('@/pages/diary/CreateDiary')
     },
     {
       path: '/404',

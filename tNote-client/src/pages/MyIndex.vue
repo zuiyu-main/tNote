@@ -1,141 +1,250 @@
 <template>
-  <el-container style="height: 500px; border: 1px solid #eee">
-    <el-header style="text-align: right; font-size: 12px">
-      <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>查看</el-dropdown-item>
-          <el-dropdown-item>新增</el-dropdown-item>
-          <el-dropdown-item>删除</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-      <span>tz</span>
-    </el-header>
-    <el-container>
-      <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-        <!-- :default-openeds="['1', '3']" 默认开启列表 -->
-        <el-menu :default-openeds="['1']">
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-message"></i>文本编辑
-            </template>
-            <el-menu-item-group>
-              <!-- <template slot="title" ref="Uedit">编辑模式</template> -->
-              <el-menu-item index="1-1" @click="goFullText()">富本文</el-menu-item>
-              <el-menu-item index="1-2" @click="goMarkDown()">markdown</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="1-3" @click="goSocket()">socket</el-menu-item>
-            </el-menu-item-group>
-            <!-- <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-            </el-submenu>-->
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-menu"></i>我的文件
-            </template>
-            <el-menu-item-group>
-              <!-- <template slot="title">分组一</template> -->
-              <el-menu-item @click="goPrivateDiary()" index="2-1">私密日记</el-menu-item>
-              <!-- <el-menu-item @click="goFullText()" index="2-2">私密日记</el-menu-item> -->
-            </el-menu-item-group>
-            <!-- <el-menu-item-group title="分组2">
-              <el-menu-item index="2-3">选项3</el-menu-item>
-            </el-menu-item-group>-->
-            <!-- <el-submenu index="2-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-            </el-submenu>-->
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-setting"></i>导航三
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="3-1">选项1</el-menu-item>
-              <el-menu-item index="3-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="3-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="3-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-        </el-menu>
-      </el-aside>
+  <div class="hei">
+    <el-container class="hei">
+      <el-header style="text-align: right; font-size: 12px">
+        <el-link class="addNote" icon="el-icon-folder-add" :underline="false" @click="open">新建分类</el-link>
+        <el-link
+          class="addNote"
+          icon="el-icon-document-add"
+          :underline="false"
+          @click="showEdit = true"
+        >新建日记</el-link>
+        <el-dropdown>
+          <i class="el-icon-setting" style="margin-right: 15px"></i>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>查看</el-dropdown-item>
+            <el-dropdown-item>新增</el-dropdown-item>
+            <el-dropdown-item>删除</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
-      <el-main class="mainid">
-        <router-view />
-      </el-main>
+        <el-dropdown @command="handleCommand">
+          <span class="el-dropdown-link">
+            {{loginUser}}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="a">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-header>
+      <el-container class="hei">
+        <el-aside width="200px">
+          <li v-for="(item,index) in itemData " :key="index">
+            <el-button type="text">{{item.label}}</el-button>
+          </li>
+        </el-aside>
+        <el-main>
+          <div v-if="showEdit">
+            <el-input v-model="form.name" placeholder="日记名称">
+              <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
+            </el-input>
+            <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="uedit.content"></uEdit>
+            <mark-down v-if="noteType === 'md'" class="hei"></mark-down>
+            <el-drawer
+              title="请选择详情设置"
+              :before-close="handleClose"
+              :visible.sync="drawer"
+              direction="rtl"
+              custom-class="demo-drawer"
+              ref="drawer"
+            >
+              <div class="demo-drawer__content">
+                <el-form :model="form">
+                  <el-form-item label="日记名称" :label-width="formLabelWidth">
+                    <el-input disabled v-model="form.name" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="日记分类" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择分类">
+                      <el-option
+                        v-for="(item,index) in itemData"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <div class="demo-drawer__footer">
+                  <el-button @click="drawer = false">取 消</el-button>
+                  <el-button
+                    type="primary"
+                    @click="$refs.drawer.closeDrawer()"
+                    :loading="loading"
+                  >{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+                </div>
+              </div>
+            </el-drawer>
+          </div>
+          <div v-else>
+            <show-diary></show-diary>
+          </div>
+        </el-main>
+      </el-container>
     </el-container>
-    <!-- <el-footer>2222</el-footer> -->
-  </el-container>
+  </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
+import uuid from 'uuid'
+import MarkDown from '@/components/MarkDown'
+import UEdit from '@/components/UE'
+import ShowDiary from '@/pages/diary/ShowDiaryList'
 export default {
+  name: 'index',
+  components: {
+    MarkDown,
+    UEdit,
+    ShowDiary
+  },
   data () {
-    return {}
+    return {
+      itemData: [], // 分类数据
+      diaryData: [], // 当前日记数据
+      ss: this.$store.state.diary.data,
+      showEdit: false, // 显示编辑器
+      uedit: {
+        content: 'jjjj'
+      }, // ue内容
+      form: {
+        name: '',
+        region: ''
+      }, // form表单内容
+      drawer: false, // 显示抽屉
+      loading: false, // 加载
+      formLabelWidth: '80px', // 抽屉label
+      noteType: 'md',
+      loginUser: JSON.parse(localStorage.getItem('userInfo')).realName
+    }
+  },
+  computed: {
+    ...mapState('diary', {
+      count: state => state.count
+    })
   },
   methods: {
-    goFullText () {
-      this.$router.push({ path: '/uedit/edit' })
+    ...mapActions('diary', ['setData']),
+    open () {
+      this.$prompt('请输入新分类名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+        .then(({ value }) => {
+          this.itemData.push({ id: uuid.v1(), label: value })
+          this.$message({
+            type: 'success',
+            message: '创建分类成功'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '操作取消'
+          })
+        })
     },
-    goMarkDown () {
-      this.$router.push({ path: '/markdown' })
+    submit () {
+      console.log('提交内容')
+      this.drawer = true
     },
-    goSocket () {
-      // this.$router.push({ path: '/socket' })
+    handleClose (done) {
+      this.$confirm('确定要提交表单吗？')
+        .then(_ => {
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+            done()
+          }, 2000)
+        })
+        .catch(_ => {})
     },
     /**
-     * websocket 会掉函数
+     * websocket
      */
-    getConfigResult (message) {
-      console.log('回调函数', message)
+    getConfigResult (data) {
+      console.log(data)
+      const json = JSON.parse(data)
+      if (json.status === '200' && json.msg === 'logout') {
+        this.$message('这是一条消息提示')
+      }
     },
-    goPrivateDiary () {
-      this.$router.push({ path: '/privateDiary' })
+    /**
+     * 用户下啦
+     */
+    handleCommand (command) {
+      this.$message('退出成功')
+      if (command === 'a') {
+        localStorage.removeItem('userInfo')
+        localStorage.removeItem('loginInfo')
+        localStorage.removeItem('token')
+        this.$router.push({ path: '/' })
+      }
     }
   },
   mounted () {
-    // this.socketApi.sendSock('测试websocket', this.getConfigResult)
-  },
-  destroyed () {}
+    this.socketApi.sendSock("{'msg':'测试websocket'}", this.getConfigResult)
+  }
 }
 </script>
-<style>
-.el-header {
+<style >
+html,
+body,
+#app {
+  height: 100%;
+}
+.el-header,
+.el-footer {
   background-color: #b3c0d1;
   color: #333;
+  text-align: center;
   line-height: 60px;
 }
 
 .el-aside {
+  background-color: #d3dce6;
   color: #333;
-  height: 830px !important;
+  text-align: center;
+  line-height: 200px;
 }
-.el-container {
-  height: 1000px !important;
+
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+  padding: 0px;
+  /* line-height: 160px; */
 }
-#editor {
+
+body > .el-container {
+  margin-bottom: 40px;
+}
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+}
+.tree-col {
+  background-color: #d3dce6;
+  color: #333;
+}
+li {
+  list-style: none;
+  line-height: 30px;
+}
+.addNote {
+  position: relative;
+  left: -1%;
+}
+.hei {
   height: 100% !important;
 }
-.el-menu {
-  height: 100%;
-}
-#base {
-  height: 750px;
-}
-/* 编辑器全凭 */
-.mainid {
-  padding: 0;
-}
-/* 菜单树艰巨 */
-.el-menu-item-group__title {
-  padding: 0;
+#edui1,
+#editor,
+#edui1_iframeholder {
+  height: 100% !important;
 }
 </style>

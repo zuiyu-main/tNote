@@ -1,6 +1,7 @@
 server:
   port: 2000
 
+
 #数据源配置
 spring:
   jackson:
@@ -31,6 +32,8 @@ spring:
     password: redis
     port: 6379
     timeout: 60000
+  application:
+    name: tNote-server
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:

@@ -14,11 +14,14 @@ import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
 import * as socketApi from './utils/socket/WebSocket'
 import { post, get } from '@/utils/request/axios'
+import store from './store'
+
 Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.socketApi = socketApi
-Vue.use(ElementUI)
 Vue.config.productionTip = false
+
+Vue.use(ElementUI)
 Vue.use(mavonEditor)
 router.beforeEach((to, from, next) => {
   if (to.fullPath !== '/' && to.fullPath !== '/404') {
@@ -33,6 +36,7 @@ router.beforeEach((to, from, next) => {
 })
 let vm = new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'
