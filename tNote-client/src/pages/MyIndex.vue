@@ -2,27 +2,26 @@
   <div class="hei">
     <el-container class="hei">
       <el-header style="text-align: right; font-size: 12px">
-        <el-link class="addNote" icon="el-icon-folder-add" :underline="false" @click="open">新建分类</el-link>
-        <el-link
-          class="addNote"
-          icon="el-icon-document-add"
-          :underline="false"
-          @click="showEdit = true"
-        >新建日记</el-link>
+        <el-link icon="el-icon-folder-add" :underline="false" @click="open">新建文件夹</el-link>
+
         <el-dropdown>
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
+          <el-link icon="el-icon-document-add" :underline="false">新建日记</el-link>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>删除</el-dropdown-item>
+            <el-dropdown-item
+              icon="el-icon-circle-plus-outline"
+              @click.native="openEdit('html')"
+            >新建富文本</el-dropdown-item>
+            <el-dropdown-item
+              icon="el-icon-circle-plus-outline"
+              @click.native="openEdit('md')"
+            >新建MarkDown</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
         <el-dropdown @command="handleCommand">
-          <span class="el-dropdown-link">
+          <el-link :underline="false">
             {{loginUser}}
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
+            <i class="el-icon-setting" style="margin-right: 15px"></i>
+          </el-link>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -31,16 +30,16 @@
       <el-container class="hei">
         <el-aside width="200px">
           <li v-for="(item,index) in itemData " :key="index">
-            <el-button type="text">{{item.title}}</el-button>
+            <el-button type="text" @click="getDiary(item)">{{item.title}}</el-button>
           </li>
         </el-aside>
         <el-main>
-          <div v-if="showEdit">
+          <div v-if="showEdit" class="hei">
             <el-input v-model="form.name" placeholder="日记名称">
               <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
             </el-input>
             <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="uedit.content"></uEdit>
-            <mark-down v-if="noteType === 'md'" class="hei"></mark-down>
+            <mark-down v-if="noteType === 'md'" class="hei" ref="mk"></mark-down>
             <el-drawer
               title="请选择详情设置"
               :before-close="handleClose"
@@ -55,12 +54,12 @@
                     <el-input disabled v-model="form.name" autocomplete="off"></el-input>
                   </el-form-item>
                   <el-form-item label="日记分类" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择分类">
+                    <el-select v-model="form.item" placeholder="请选择分类">
                       <el-option
                         v-for="(item,index) in itemData"
                         :key="index"
-                        :label="item.label"
-                        :value="item.value"
+                        :label="item.title"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-form-item>
@@ -77,7 +76,7 @@
             </el-drawer>
           </div>
           <div v-else>
-            <show-diary></show-diary>
+            <show-diary :diaryData="diaryData"></show-diary>
           </div>
         </el-main>
       </el-container>
@@ -91,7 +90,7 @@ import MarkDown from '@/components/MarkDown'
 import UEdit from '@/components/UE'
 import ShowDiary from '@/pages/diary/ShowDiaryList'
 import * as DiaryApi from '@/api/diary/Diary'
-// import * as Check from '@/utils/Check'
+import * as Check from '@/utils/Check'
 import { LogOut } from '@/api/user/login'
 export default {
   name: 'index',
@@ -107,11 +106,11 @@ export default {
       ss: this.$store.state.diary.data,
       showEdit: false, // 显示编辑器
       uedit: {
-        content: 'jjjj'
+        content: ''
       }, // ue内容
       form: {
         name: '',
-        region: ''
+        item: ''
       }, // form表单内容
       drawer: false, // 显示抽屉
       loading: false, // 加载
@@ -138,10 +137,12 @@ export default {
             title: value,
             type: 1
           }
-          DiaryApi.addItem(item)
+          DiaryApi.save(item)
             .then(res => {
               if (res.code === 200) {
                 this.itemData.push(item)
+              } else {
+                this.$message.error(res.msg)
               }
             })
             .catch(e => {
@@ -159,6 +160,9 @@ export default {
           })
         })
     },
+    /**
+     * 抽屉提交
+     */
     submit () {
       console.log('提交内容')
       this.drawer = true
@@ -170,7 +174,8 @@ export default {
           setTimeout(() => {
             this.loading = false
             done()
-          }, 2000)
+            this.saveContent()
+          }, 1000)
         })
         .catch(_ => {})
     },
@@ -192,13 +197,25 @@ export default {
           .then(res => {
             if (res.code === 200) {
               this.removeUserInfo('logout')
+            } else {
+              this.$message.error(res.msg)
             }
           })
           .catch(e => {
             console.error(e)
           })
       }
+      /**
+       * token 过期
+       */
+      if (data.status === 203) {
+        this.$message.error('token 过期，请重新登录')
+        this.removeUserInfo()
+      }
     },
+    /**
+     * 移除用户信息
+     */
     removeUserInfo () {
       localStorage.removeItem('userInfo')
       localStorage.removeItem('loginInfo')
@@ -222,13 +239,73 @@ export default {
           })
       }
     },
+    /**
+     * 初始化分类
+     */
     initItem () {
       DiaryApi.getItem().then(res => {
-        this.itemData = res.data
+        if (res.code === 200) {
+          this.itemData = res.data
+          this.getDiary(this.itemData[0])
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    /**
+     * 展示编辑器
+     */
+    openEdit (type) {
+      console.log(type)
+      this.noteType = type
+      this.showEdit = true
+    },
+    /**
+     * 获取日记
+     */
+    getDiary (item) {
+      DiaryApi.getNoteByItem({ itemId: item.id }).then(res => {
+        console.log('获取文章结果', res)
+        this.showEdit = false
+        if (res.code === 200) {
+          this.diaryData = res.data
+        } else {
+          this.diaryData = []
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    /**
+     * 保存文件内容
+     */
+    saveContent () {
+      const content = this.$refs.ue.getUEContent()
+      console.log('uecontent', content, this.form)
+      const item = {
+        id: uuid.v1(),
+        title: this.form.name,
+        type: 0,
+        content: content,
+        itemId: this.form.item
+      }
+      DiaryApi.save(item).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+          console.log('保存笔记返回', res)
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     }
   },
   mounted () {
+    const token = Check.checkToken()
+    if (!token) {
+      this.$message.error('token过期，请重新登录')
+    }
     const json = {
       msg: '测试websocket',
       status: 200
@@ -287,10 +364,6 @@ li {
   list-style: none;
   line-height: 30px;
 }
-.addNote {
-  position: relative;
-  left: -1%;
-}
 .hei {
   height: 100% !important;
 }
@@ -298,5 +371,8 @@ li {
 #editor,
 #edui1_iframeholder {
   height: 100% !important;
+}
+.el-form-item__label {
+  color: #606266 !important;
 }
 </style>

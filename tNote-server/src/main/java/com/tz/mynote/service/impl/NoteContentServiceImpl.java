@@ -134,12 +134,12 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> getNoteByItem(HttpServletRequest request, String itemId) {
+    public ResultBean getNoteByItem(HttpServletRequest request, String itemId) {
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
-        Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(1).and("deleted").is(0));
+        Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(0).and("deleted").is(0).and("itemId").is(itemId));
         log.info("查询分类id={}下日记，query={}",itemId,query);
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class, MongoCollectionName.NOTE_CONTENT);
         log.info("查询分类日记结束，查询结果={}",noteContents);
-        return ResultBean.successData(noteContents);
+        return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).data(noteContents).total(noteContents.size()).build();
     }
 }

@@ -18,7 +18,7 @@ export default {
     // or 'mavon-editor': mavonEditor
   },
   data () {
-    return { value: 'Please enter the content...' }
+    return { value: '' }
   },
 
   methods: {

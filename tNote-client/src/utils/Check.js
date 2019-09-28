@@ -18,3 +18,14 @@ export function isJSON (str) {
     }
   }
 }
+/**
+ * 检测token
+ */
+export function checkToken () {
+  const token = localStorage.getItem('token')
+  if (token) {
+    return true
+  } else {
+    return false
+  }
+}
