@@ -11,6 +11,7 @@ import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.constant.Login;
+import com.tz.mynote.constant.RedisKey;
 import com.tz.mynote.service.NoteUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 } catch (JWTDecodeException j) {
                     throw new RuntimeException("401");
                 }
-                Boolean aBoolean = stringRedisTemplate.hasKey(token);
+                Boolean aBoolean = stringRedisTemplate.hasKey(RedisKey.LOGIN_KEY+userId);
                 if (!aBoolean){
                     throw new RuntimeException("token 过期，请重新登录");
                 }

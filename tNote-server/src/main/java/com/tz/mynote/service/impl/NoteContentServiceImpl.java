@@ -84,6 +84,9 @@ public class NoteContentServiceImpl implements NoteContentService {
         }else{
             content.setItemId(CommonConstant.BASE_ITEM);
         }
+        content.setContent("class");
+        content.setGmtCreate(new Date());
+        content.setGmtModified(new Date());
         NoteContent save = mongoTemplate.save(content, MongoCollectionName.NOTE_CONTENT);
         log.info("保存（分类）日记成功，保存参【{}】",save);
         return ResultBean.successData(save);

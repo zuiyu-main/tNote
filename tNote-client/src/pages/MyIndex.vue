@@ -24,14 +24,14 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="a">退出登录</el-dropdown-item>
+            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
       <el-container class="hei">
         <el-aside width="200px">
           <li v-for="(item,index) in itemData " :key="index">
-            <el-button type="text">{{item.label}}</el-button>
+            <el-button type="text">{{item.title}}</el-button>
           </li>
         </el-aside>
         <el-main>
@@ -90,6 +90,9 @@ import uuid from 'uuid'
 import MarkDown from '@/components/MarkDown'
 import UEdit from '@/components/UE'
 import ShowDiary from '@/pages/diary/ShowDiaryList'
+import * as DiaryApi from '@/api/diary/Diary'
+// import * as Check from '@/utils/Check'
+import { LogOut } from '@/api/user/login'
 export default {
   name: 'index',
   components: {
@@ -130,7 +133,20 @@ export default {
         cancelButtonText: '取消'
       })
         .then(({ value }) => {
-          this.itemData.push({ id: uuid.v1(), label: value })
+          const item = {
+            id: uuid.v1(),
+            title: value,
+            type: 1
+          }
+          DiaryApi.addItem(item)
+            .then(res => {
+              if (res.code === 200) {
+                this.itemData.push(item)
+              }
+            })
+            .catch(e => {
+              console.error(e)
+            })
           this.$message({
             type: 'success',
             message: '创建分类成功'
@@ -162,27 +178,63 @@ export default {
      * websocket
      */
     getConfigResult (data) {
-      console.log(data)
-      const json = JSON.parse(data)
-      if (json.status === '200' && json.msg === 'logout') {
-        this.$message('这是一条消息提示')
+      console.log('websocket 监听数据', data)
+      if (data.status === 404 && data.msg === 'logout') {
+        this.$notify({
+          title: '退出登录提醒',
+          message: '您的账号已在别处登录,请您修改密码或重新登录',
+          type: 'warning',
+          duration: 5000,
+          showClose: false,
+          offset: '50%'
+        })
+        LogOut()
+          .then(res => {
+            if (res.code === 200) {
+              this.removeUserInfo('logout')
+            }
+          })
+          .catch(e => {
+            console.error(e)
+          })
       }
     },
+    removeUserInfo () {
+      localStorage.removeItem('userInfo')
+      localStorage.removeItem('loginInfo')
+      localStorage.removeItem('token')
+      this.$router.push({ path: '/' })
+    },
     /**
-     * 用户下啦
+     * 用户下限
      */
     handleCommand (command) {
       this.$message('退出成功')
-      if (command === 'a') {
-        localStorage.removeItem('userInfo')
-        localStorage.removeItem('loginInfo')
-        localStorage.removeItem('token')
-        this.$router.push({ path: '/' })
+      if (command === 'logout') {
+        LogOut()
+          .then(res => {
+            if (res.code === 200) {
+              this.removeUserInfo('logout')
+            }
+          })
+          .catch(e => {
+            console.error(e)
+          })
       }
+    },
+    initItem () {
+      DiaryApi.getItem().then(res => {
+        this.itemData = res.data
+      })
     }
   },
   mounted () {
-    this.socketApi.sendSock("{'msg':'测试websocket'}", this.getConfigResult)
+    const json = {
+      msg: '测试websocket',
+      status: 200
+    }
+    this.socketApi.sendSock(json, this.getConfigResult)
+    this.initItem()
   }
 }
 </script>

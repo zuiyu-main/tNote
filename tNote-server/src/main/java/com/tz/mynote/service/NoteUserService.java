@@ -20,4 +20,6 @@ public interface NoteUserService {
     ResultBean login(HttpServletRequest request, NoteUsersVO noteUsersVO);
 
     ResultBean register(HttpServletRequest request, NoteUsersVO noteUsersVO);
+
+    ResultBean logout(HttpServletRequest request);
 }

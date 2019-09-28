@@ -49,17 +49,18 @@ public class NoteUserController {
     public ResultBean login(HttpServletRequest request, @RequestBody NoteUsersVO noteUsersVO){
         return noteUserService.login(request,noteUsersVO);
     }
-    @PassToken
-    @GetMapping("/getMessage")
-    public String getMessage(){
-        return "你已通过验证";
-    }
-    @UserLoginToken
-    @GetMapping("/get")
-    public ResultBean get(){
-        return ResultBean.builder().data("sssss").msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).build();
-    }
 
+    /**
+     * 用户退出
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    @UserLoginToken
+    @OptionalLog(module="用户", methods="退出接口")
+    public ResultBean logout(HttpServletRequest request){
+        return noteUserService.logout(request);
+    }
     /**
      * 注册用户
      * @param request
@@ -72,5 +73,27 @@ public class NoteUserController {
     public ResultBean register(HttpServletRequest request, @RequestBody @Validated(SaveService.class) NoteUsersVO noteUsersVO, BindingResult bindingResult){
         return noteUserService.register(request,noteUsersVO);
     }
+
+    /**
+     * 测试接口
+     * @return
+     */
+    @PassToken
+    @GetMapping("/getMessage")
+    public String getMessage(){
+        return "你已通过验证";
+    }
+
+    /**
+     * 测试验证token接口
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping("/get")
+    public ResultBean get(){
+        return ResultBean.builder().data("sssss").msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).build();
+    }
+
+
 
 }

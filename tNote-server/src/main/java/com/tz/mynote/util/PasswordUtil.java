@@ -2,6 +2,7 @@ package com.tz.mynote.util;
 
 import org.apache.commons.codec.binary.Hex;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.MessageDigest;
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class PasswordUtil {
     /**
      * 校验密码是否正确
      */
-    public static boolean verify(String password, String md5) {
+    public static boolean verify(String password, String md5)  {
         char[] cs1 = new char[32];
         char[] cs2 = new char[16];
         for (int i = 0; i < 48; i += 3) {

@@ -11,6 +11,7 @@ import com.tz.mynote.constant.RedisKey;
 import com.tz.mynote.dao.NoteUsersMapper;
 import com.tz.mynote.service.NoteUserService;
 import com.tz.mynote.util.JwtUtil;
+import com.tz.mynote.util.LoginInfoUtil;
 import com.tz.mynote.util.PasswordUtil;
 import com.tz.mynote.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,8 @@ public class NoteUserServiceImpl implements NoteUserService {
     private NoteUsersMapper noteUsersMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private LoginInfoUtil loginInfoUtil;
     private static BeanCopier copier = BeanCopier.create(NoteUsersVO.class,NoteUsers.class,false);
     @Override
     public NoteUsers findUserById(String userId) {
@@ -62,17 +65,18 @@ public class NoteUserServiceImpl implements NoteUserService {
         copier.copy(noteUsersVO,user,null);
         NoteUsers noteUsers=findByUserName(user);
         if(noteUsers==null){
-            return ResultBean.builder().msg("登录失败,用户不存在").code(HttpStatus.OK.value()).build();
+            return ResultBean.builder().msg("登录失败,用户不存在").code(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value()).build();
         }else {
             boolean b = checkPassWord(noteUsersVO.getPassword() + noteUsers.getSlat(), noteUsers.getPassword());
             if (!b) {
-                return ResultBean.builder().msg("登录失败,密码错误").code(HttpStatus.OK.value()).build();
+                return ResultBean.builder().msg("登录失败,密码错误").code(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value()).build();
             } else {
                 String token = null;
                 try {
                     token = JwtUtil.getToken(noteUsers);
                 } catch (UnsupportedEncodingException e) {
                     log.error("生成token出错，错误信息=[{}]", e.getMessage());
+                    return ResultBean.builder().msg("登录失败,token错误").code(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value()).build();
                 }
 //                request.setAttribute("Authorization", token);
                 JSONObject object = new JSONObject();
@@ -114,7 +118,7 @@ public class NoteUserServiceImpl implements NoteUserService {
             log.info("检测用户客户端id={}",wsId);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("msg","logout");
-            jsonObject.put("status",-1);
+            jsonObject.put("status",404);
             WebSocketServer.sendInfo(jsonObject.toJSONString(),wsId);
         }
     }
@@ -154,6 +158,19 @@ public class NoteUserServiceImpl implements NoteUserService {
         int insert = noteUsersMapper.insert(noteUsers);
         log.info("用户注册结果=[{}],注册信息=[{}]",insert,noteUsers);
         return ResultBean.builder().code(HttpStatus.OK.value()).msg(HttpStatus.OK.getReasonPhrase()).build();
+    }
+
+    @Override
+    public ResultBean logout(HttpServletRequest request) {
+        NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
+        String key = RedisKey.LOGIN_KEY+loginInfo.getId();
+        log.info("系统退出，用户=[{}]",loginInfo);
+        Boolean aBoolean = stringRedisTemplate.hasKey(key);
+        if(aBoolean){
+            stringRedisTemplate.delete(key);
+            log.info("redis 移除登录信息，key=[{}]",key);
+        }
+        return ResultBean.successMsg("退出成功");
     }
 
     /**

@@ -14,3 +14,10 @@ export function userLogin (data) {
 export function userRegister (data) {
   return request('post', '/user/register', data)
 }
+/**
+ * 退出
+ * @param {z} data
+ */
+export function LogOut () {
+  return request('post', '/user/logout')
+}

@@ -72,7 +72,6 @@ export default {
      * 提交登录请求
      */
     onSubmit () {
-      console.log('submit!', this.form)
       const params = {
         userName: this.form.name,
         password: this.form.password
@@ -88,6 +87,11 @@ export default {
           }
           localStorage.setItem('loginInfo', JSON.stringify(loginInfo))
           this.$router.push({ path: '/index' })
+        } else {
+          this.$message({
+            message: res.msg,
+            type: 'warning'
+          })
         }
       })
     },
