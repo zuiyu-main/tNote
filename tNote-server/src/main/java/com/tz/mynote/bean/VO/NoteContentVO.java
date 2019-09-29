@@ -20,7 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class NoteContentVO {
     @NotNull(message = "id must not be null",groups = UpdateService.class)
-    private String id;
+    private Long id;
     /**
      * 标题
      */
@@ -31,6 +31,10 @@ public class NoteContentVO {
      */
     private String content;
     /**
+     * 后缀
+     */
+    private String suffix;
+    /**
      * 类型 0 笔记，1 类别
      */
     @NotNull(message = "type must not be null",groups = SaveService.class)
@@ -38,7 +42,7 @@ public class NoteContentVO {
     /**
      * 父id，即所属类别
      */
-    private String itemId;
+    private Long itemId;
     /**
      * 创建人
      */
@@ -46,7 +50,7 @@ public class NoteContentVO {
     /**
      * 创建人id
      */
-    private String authorId;
+    private Long authorId;
     /**
      * 创建时间
      */

@@ -94,7 +94,7 @@ public class NoteUserServiceImpl implements NoteUserService {
                     e.printStackTrace();
                     log.error("用户踢出上一个客户端失败，redisKey={}",RedisKey.LOGIN_KEY+noteUsers.getId());
                 }
-                stringRedisTemplate.opsForValue().set(RedisKey.LOGIN_KEY+noteUsers.getId(), object.toString(), 30, TimeUnit.MINUTES);
+                stringRedisTemplate.opsForValue().set(RedisKey.LOGIN_KEY+noteUsers.getId(), object.toString(), 7, TimeUnit.DAYS);
                 Map<String, Object> map = new HashMap<>(8);
                 map.put("token", token);
                 map.put("user", object);

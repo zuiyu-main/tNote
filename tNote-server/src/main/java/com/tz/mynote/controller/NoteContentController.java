@@ -76,7 +76,7 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="获取某个分类下面笔记")
     @ApiOperation(value ="getNoteByItem",notes = "获取某个分类下面笔记",tags = "日记内容区")
-    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam String itemId){
+    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam Long itemId){
         return noteContentService.getNoteByItem(request,itemId);
     }
 

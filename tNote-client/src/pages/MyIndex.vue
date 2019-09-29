@@ -30,7 +30,9 @@
       <el-container class="hei">
         <el-aside width="200px">
           <li v-for="(item,index) in itemData " :key="index">
-            <el-button type="text" @click="getDiary(item)">{{item.title}}</el-button>
+            <el-button type="text" icon="el-icon-folder" @click="getDiary(item)">{{item.title}}</el-button>
+
+            <!-- <el-button type="text" @click="getDiary(item)">{{item.title}}</el-button> -->
           </li>
         </el-aside>
         <el-main>
@@ -38,8 +40,8 @@
             <el-input v-model="form.name" placeholder="日记名称">
               <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
             </el-input>
-            <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="uedit.content"></uEdit>
-            <mark-down v-if="noteType === 'md'" class="hei" ref="mk"></mark-down>
+            <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="edit.content"></uEdit>
+            <mark-down v-if="noteType === 'md'" class="hei" ref="md" :value="edit.content"></mark-down>
             <el-drawer
               title="请选择详情设置"
               :before-close="handleClose"
@@ -85,7 +87,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import uuid from 'uuid'
+// import uuid from 'uuid'
 import MarkDown from '@/components/MarkDown'
 import UEdit from '@/components/UE'
 import ShowDiary from '@/pages/diary/ShowDiaryList'
@@ -105,7 +107,7 @@ export default {
       diaryData: [], // 当前日记数据
       ss: this.$store.state.diary.data,
       showEdit: false, // 显示编辑器
-      uedit: {
+      edit: {
         content: ''
       }, // ue内容
       form: {
@@ -133,7 +135,7 @@ export default {
       })
         .then(({ value }) => {
           const item = {
-            id: uuid.v1(),
+            // id: uuid.v1(),
             title: value,
             type: 1
           }
@@ -226,11 +228,11 @@ export default {
      * 用户下限
      */
     handleCommand (command) {
-      this.$message('退出成功')
       if (command === 'logout') {
         LogOut()
           .then(res => {
             if (res.code === 200) {
+              this.$message('退出成功')
               this.removeUserInfo('logout')
             }
           })
@@ -279,15 +281,20 @@ export default {
      * 保存文件内容
      */
     saveContent () {
-      const content = this.$refs.ue.getUEContent()
-      console.log('uecontent', content, this.form)
+      const suffix = this.noteType
+      if (suffix === 'html') {
+        this.edit.content = this.$refs.ue.getUEContent()
+      } else {
+        this.edit.content = this.$refs.md.getMDContent()
+      }
       const item = {
-        id: uuid.v1(),
         title: this.form.name,
         type: 0,
-        content: content,
-        itemId: this.form.item
+        content: this.edit.content,
+        itemId: this.form.item,
+        suffix: suffix
       }
+      console.log(item)
       DiaryApi.save(item).then(res => {
         if (res.code === 200) {
           this.$message({

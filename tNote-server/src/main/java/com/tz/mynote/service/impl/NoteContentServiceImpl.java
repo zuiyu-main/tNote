@@ -83,8 +83,8 @@ public class NoteContentServiceImpl implements NoteContentService {
             }
         }else{
             content.setItemId(CommonConstant.BASE_ITEM);
+            content.setContent("class");
         }
-        content.setContent("class");
         content.setGmtCreate(new Date());
         content.setGmtModified(new Date());
         NoteContent save = mongoTemplate.save(content, MongoCollectionName.NOTE_CONTENT);
@@ -134,7 +134,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean getNoteByItem(HttpServletRequest request, String itemId) {
+    public ResultBean getNoteByItem(HttpServletRequest request, Long itemId) {
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
         Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(0).and("deleted").is(0).and("itemId").is(itemId));
         log.info("查询分类id={}下日记，query={}",itemId,query);

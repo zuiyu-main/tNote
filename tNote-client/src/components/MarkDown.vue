@@ -2,7 +2,7 @@
  <template>
   <div id="base">
     <div id="editor">
-      <mavon-editor ref="md" style="height:100%" v-model="value"></mavon-editor>
+      <mavon-editor ref="md" style="height:100%" v-model="content"></mavon-editor>
     </div>
     <!-- <div id="demo">@imgAdd="$imgAdd" @imgDel="$imgDel"</div> -->
   </div>
@@ -13,12 +13,20 @@ import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'editor',
+  props: ['value'],
+  watch: {
+    value (data) {
+      this.content = data
+    }
+  },
   components: {
     mavonEditor
     // or 'mavon-editor': mavonEditor
   },
   data () {
-    return { value: '' }
+    return {
+      content: ''
+    }
   },
 
   methods: {
@@ -41,6 +49,9 @@ export default {
        */
       // $vm.$img2Url(pos, url)
       // })
+    },
+    getMDContent () {
+      return this.content
     }
   }
 }

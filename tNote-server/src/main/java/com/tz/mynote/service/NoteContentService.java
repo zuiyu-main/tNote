@@ -25,5 +25,5 @@ public interface NoteContentService {
 
     ResultBean<NoteContent> getItem(HttpServletRequest request);
 
-    ResultBean getNoteByItem(HttpServletRequest request, String itemId);
+    ResultBean getNoteByItem(HttpServletRequest request, Long itemId);
 }

@@ -32,6 +32,10 @@ public class NoteContent {
      */
     private String content;
     /**
+     * 后缀
+     */
+    private String suffix;
+    /**
      * 类型 0 笔记，1 类别
      */
     @Indexed
