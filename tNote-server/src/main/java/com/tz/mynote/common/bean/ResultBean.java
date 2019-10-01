@@ -29,7 +29,7 @@ public class ResultBean<T> {
                 .code(HttpStatus.OK.value())
                 .data(data).build();
     }
-    public static ResultBean successData(Object data){
+    public static  ResultBean successData(Object data){
         return ResultBean.builder()
                 .msg(HttpStatus.OK.getReasonPhrase())
                 .code(HttpStatus.OK.value())

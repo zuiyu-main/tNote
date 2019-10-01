@@ -7,6 +7,7 @@ import com.tz.mynote.bean.VO.NoteContentVO;
 import com.tz.mynote.bean.mongo.NoteContent;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.constant.CommonConstant;
+import com.tz.mynote.constant.FileSuffixEnum;
 import com.tz.mynote.constant.MongoCollectionName;
 import com.tz.mynote.dao.mongo.NoteContentDao;
 import com.tz.mynote.service.NoteContentService;
@@ -75,13 +76,16 @@ public class NoteContentServiceImpl implements NoteContentService {
         content.setAuthor(loginInfo.getRealName());
         content.setAuthorId(loginInfo.getId());
         content.setDeleted(0);
-        content.setId(SNOWFLAKEUTIL.nextId());
+        if(null == content.getId()){
+            content.setId(SNOWFLAKEUTIL.nextId());
+        }
         if(CommonConstant.FILE.equals(content.getType())){
             if(null == content.getItemId()){
                 // 未分类文章统一类别
                 content.setItemId(CommonConstant.BASE_ITEM);
             }
         }else{
+            content.setSuffix(FileSuffixEnum.DIR);
             content.setItemId(CommonConstant.BASE_ITEM);
             content.setContent("class");
         }
@@ -93,7 +97,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> delete(HttpServletRequest request, String contentId) {
+    public ResultBean<NoteContent> delete(HttpServletRequest request, Long contentId) {
         log.info("删除（分类）日记，删除条件，id={}",contentId);
         Query query = new  Query(Criteria.where("id").is(contentId));
         DeleteResult remove = mongoTemplate.remove(query,MongoCollectionName.NOTE_CONTENT);

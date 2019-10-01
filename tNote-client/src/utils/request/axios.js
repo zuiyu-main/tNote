@@ -39,6 +39,7 @@ instance.interceptors.response.use(response => {
 }, error => {
   // 对响应错误做点什么
   console.log('err' + error)// for debug
+  this.$message.error(error)
   return Promise.reject(error)
 })
 

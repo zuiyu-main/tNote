@@ -41,7 +41,12 @@
               <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
             </el-input>
             <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="edit.content"></uEdit>
-            <mark-down v-if="noteType === 'md'" class="hei" ref="md" :value="edit.content"></mark-down>
+            <mark-down
+              v-if="noteType === 'md'"
+              class="hei"
+              ref="markdown"
+              v-bind:mdContent="edit.content"
+            ></mark-down>
             <el-drawer
               title="请选择详情设置"
               :before-close="handleClose"
@@ -78,7 +83,7 @@
             </el-drawer>
           </div>
           <div v-else>
-            <show-diary :diaryData="diaryData"></show-diary>
+            <show-diary :diaryData="diaryData" @handleDelete="handleDelete"></show-diary>
           </div>
         </el-main>
       </el-container>
@@ -111,20 +116,28 @@ export default {
         content: ''
       }, // ue内容
       form: {
+        id: null,
         name: '',
         item: ''
       }, // form表单内容
       drawer: false, // 显示抽屉
       loading: false, // 加载
       formLabelWidth: '80px', // 抽屉label
-      noteType: 'md',
+      noteType: '',
       loginUser: JSON.parse(localStorage.getItem('userInfo')).realName
     }
   },
   computed: {
     ...mapState('diary', {
-      count: state => state.count
+      count: state => state.count,
+      showContent: state => state.showContent
     })
+  },
+  watch: {
+    showContent (data) {
+      console.log('监听store', data)
+      this.showEditContent(data)
+    }
   },
   methods: {
     ...mapActions('diary', ['setData']),
@@ -135,14 +148,13 @@ export default {
       })
         .then(({ value }) => {
           const item = {
-            // id: uuid.v1(),
             title: value,
             type: 1
           }
           DiaryApi.save(item)
             .then(res => {
               if (res.code === 200) {
-                this.itemData.push(item)
+                this.initItem()
               } else {
                 this.$message.error(res.msg)
               }
@@ -166,7 +178,6 @@ export default {
      * 抽屉提交
      */
     submit () {
-      console.log('提交内容')
       this.drawer = true
     },
     handleClose (done) {
@@ -185,7 +196,6 @@ export default {
      * websocket
      */
     getConfigResult (data) {
-      console.log('websocket 监听数据', data)
       if (data.status === 404 && data.msg === 'logout') {
         this.$notify({
           title: '退出登录提醒',
@@ -258,7 +268,8 @@ export default {
      * 展示编辑器
      */
     openEdit (type) {
-      console.log(type)
+      this.edit.content = ''
+      this.form = {}
       this.noteType = type
       this.showEdit = true
     },
@@ -266,10 +277,13 @@ export default {
      * 获取日记
      */
     getDiary (item) {
+      if (item === undefined) {
+        return
+      }
       DiaryApi.getNoteByItem({ itemId: item.id }).then(res => {
-        console.log('获取文章结果', res)
         this.showEdit = false
         if (res.code === 200) {
+          console.log('获取日记', res)
           this.diaryData = res.data
         } else {
           this.diaryData = []
@@ -285,26 +299,46 @@ export default {
       if (suffix === 'html') {
         this.edit.content = this.$refs.ue.getUEContent()
       } else {
-        this.edit.content = this.$refs.md.getMDContent()
+        this.edit.content = this.$refs.markdown.getMDContent()
       }
       const item = {
         title: this.form.name,
         type: 0,
         content: this.edit.content,
         itemId: this.form.item,
-        suffix: suffix
+        suffix: suffix,
+        id: this.form.id
       }
-      console.log(item)
+      console.log('保存参数', item)
       DiaryApi.save(item).then(res => {
         if (res.code === 200) {
           this.$message({
             message: res.msg,
             type: 'success'
           })
-          console.log('保存笔记返回', res)
         } else {
           this.$message.error(res.msg)
         }
+      })
+    },
+    /**
+     * 展示编辑器内容
+     */
+    showEditContent (data) {
+      this.showEdit = true
+      this.noteType = data.suffix
+      this.edit.content = data.content
+      this.form.name = data.title
+      this.form.item = data.itemId
+      this.form.id = data.id
+    },
+    /**
+     * 删除
+     */
+    handleDelete (row) {
+      console.log('删除数据', row)
+      DiaryApi.deleteDiary(row.id).then(res => {
+        console.log('shanchu >>>', res)
       })
     }
   },

@@ -48,7 +48,7 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="删除分类或笔记")
     @ApiOperation(value ="delete",notes = "删除分类或者日记内容",tags = "日记内容区")
-    public ResultBean<NoteContent> delete(HttpServletRequest request,@RequestParam String contentId){
+    public ResultBean<NoteContent> delete(HttpServletRequest request,  Long contentId){
         return noteContentService.delete(request,contentId);
     }
     @PutMapping("/updateTitle")

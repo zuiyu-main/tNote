@@ -3,7 +3,8 @@
 // shape: [{ id, quantity }]
 const state = {
   data: {},
-  count: 'diary'
+  count: 'diary',
+  showContent: {}
 }
 
 // getters
@@ -20,6 +21,12 @@ const actions = {
   },
   getData (context) {
     context.commit('getDataFun')
+  },
+  setContent (context, content) {
+    context.commit('setContentFun', content)
+  },
+  getContent (context) {
+    context.commit('getContentFun')
   }
 }
 
@@ -30,6 +37,12 @@ const mutations = {
   },
   getDataFun (state) {
     return state.data
+  },
+  setContentFun (state, content) {
+    state.showContent = content
+  },
+  getContentFun (state) {
+    return state.showContent
   }
 }
 

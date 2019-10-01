@@ -19,15 +19,13 @@
     </el-table-column>
     <el-table-column label="名称" min-width="280">
       <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.title }}</span>
-
-        <!-- <el-popover trigger="hover" placement="top">
-          <p>姓名: {{ scope.row.name }}</p>
-          <p>住址: {{ scope.row.address }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.name }}</el-tag>
-          </div>
-        </el-popover>-->
+        <span style="margin-left: 10px">
+          <el-link
+            :underline="false"
+            icon="el-icon-view el-icon--right"
+            @click="showContent(scope.row)"
+          >{{ scope.row.title }}</el-link>
+        </span>
       </template>
     </el-table-column>
     <el-table-column label="操作">
@@ -40,6 +38,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: {
     diaryData: {
@@ -60,11 +60,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions('diary', ['setContent']),
+
     handleEdit (index, row) {
       console.log(index, row)
     },
     handleDelete (index, row) {
+      this.$emit('handleDelete', row)
       console.log(index, row)
+    },
+    showContent (row) {
+      this.setContent(row)
     }
   }
 }

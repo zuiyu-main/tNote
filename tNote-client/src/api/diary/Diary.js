@@ -20,3 +20,11 @@ export function getItem () {
 export function getNoteByItem (data) {
   return request('get', '/note/getNoteByItem', data)
 }
+/**
+ * 删除分类或者笔记
+ *  { 'Content-Type': 'application/x-www-form-urlencoded' }
+ * @param {*} data
+ */
+export function deleteDiary (data) {
+  return request('delete', '/note/delete', { contentId: data })
+}

@@ -11,12 +11,16 @@
 // Local Registration
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+
 export default {
   name: 'editor',
-  props: ['value'],
+  props: ['mdContent'],
   watch: {
-    value (data) {
-      this.content = data
+    mdContent: {
+      immediate: true, // 这句重要
+      handler (val) {
+        this.content = val
+      }
     }
   },
   components: {
