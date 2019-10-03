@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
+import java.util.Map;
 
 /**
  * @author tz
@@ -48,8 +49,8 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="删除分类或笔记")
     @ApiOperation(value ="delete",notes = "删除分类或者日记内容",tags = "日记内容区")
-    public ResultBean<NoteContent> delete(HttpServletRequest request,  Long contentId){
-        return noteContentService.delete(request,contentId);
+    public ResultBean<NoteContent> delete(HttpServletRequest request,@RequestBody Map<String,Object> params){
+        return noteContentService.delete(request,params.get("contentId").toString());
     }
     @PutMapping("/updateTitle")
     @UserLoginToken
@@ -76,7 +77,7 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="获取某个分类下面笔记")
     @ApiOperation(value ="getNoteByItem",notes = "获取某个分类下面笔记",tags = "日记内容区")
-    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam Long itemId){
+    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam String itemId){
         return noteContentService.getNoteByItem(request,itemId);
     }
 

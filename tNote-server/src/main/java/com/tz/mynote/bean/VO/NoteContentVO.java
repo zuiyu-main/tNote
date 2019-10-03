@@ -20,7 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class NoteContentVO {
     @NotNull(message = "id must not be null",groups = UpdateService.class)
-    private Long id;
+    private String id;
     /**
      * 标题
      */
@@ -42,7 +42,7 @@ public class NoteContentVO {
     /**
      * 父id，即所属类别
      */
-    private Long itemId;
+    private String itemId;
     /**
      * 创建人
      */

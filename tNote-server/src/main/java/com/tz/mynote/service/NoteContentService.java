@@ -17,7 +17,7 @@ public interface NoteContentService {
 
     ResultBean<NoteContent> save(HttpServletRequest request, NoteContentVO noteContentVO);
 
-    ResultBean<NoteContent> delete(HttpServletRequest request, Long contentId);
+    ResultBean<NoteContent> delete(HttpServletRequest request, String contentId);
 
     ResultBean<NoteContent> updateTitle(HttpServletRequest request, String contentId, String title);
 
@@ -25,5 +25,5 @@ public interface NoteContentService {
 
     ResultBean<NoteContent> getItem(HttpServletRequest request);
 
-    ResultBean getNoteByItem(HttpServletRequest request, Long itemId);
+    ResultBean getNoteByItem(HttpServletRequest request, String itemId);
 }

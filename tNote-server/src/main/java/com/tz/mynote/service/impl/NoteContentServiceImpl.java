@@ -16,16 +16,19 @@ import com.tz.mynote.util.SnowFlakeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author tz
@@ -48,7 +51,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     @Override
     public ResultBean test() {
         NoteContent content = new NoteContent();
-        content.setId(SNOWFLAKEUTIL.nextId());
+        content.setId(UUID.randomUUID().toString());
         content.setTitle("test");
         content.setContent("测试mongodb联通");
         content.setAuthor("田子");
@@ -77,7 +80,7 @@ public class NoteContentServiceImpl implements NoteContentService {
         content.setAuthorId(loginInfo.getId());
         content.setDeleted(0);
         if(null == content.getId()){
-            content.setId(SNOWFLAKEUTIL.nextId());
+            content.setId(UUID.randomUUID().toString());
         }
         if(CommonConstant.FILE.equals(content.getType())){
             if(null == content.getItemId()){
@@ -97,12 +100,19 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> delete(HttpServletRequest request, Long contentId) {
+    public ResultBean<NoteContent> delete(HttpServletRequest request, String contentId) {
         log.info("删除（分类）日记，删除条件，id={}",contentId);
         Query query = new  Query(Criteria.where("id").is(contentId));
-        DeleteResult remove = mongoTemplate.remove(query,MongoCollectionName.NOTE_CONTENT);
-        log.info("删除结果=[{}]",remove);
-        return ResultBean.success("删除成功",remove);
+        List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class);
+        if(!CollectionUtils.isEmpty(noteContents)){
+            noteContents.forEach(e->{
+                e.setDeleted(1);
+                mongoTemplate.save(e,MongoCollectionName.NOTE_CONTENT);
+            });
+        }
+
+        log.info("删除结果list=[{}]",noteContents);
+        return ResultBean.success("删除成功",noteContents);
     }
 
     @Override
@@ -138,9 +148,10 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean getNoteByItem(HttpServletRequest request, Long itemId) {
+    public ResultBean getNoteByItem(HttpServletRequest request, String itemId) {
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
         Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(0).and("deleted").is(0).and("itemId").is(itemId));
+        query.with(new Sort(Sort.Direction.DESC,"gmtCreate"));
         log.info("查询分类id={}下日记，query={}",itemId,query);
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class, MongoCollectionName.NOTE_CONTENT);
         log.info("查询分类日记结束，查询结果={}",noteContents);

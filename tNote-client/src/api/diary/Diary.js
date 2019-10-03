@@ -26,5 +26,5 @@ export function getNoteByItem (data) {
  * @param {*} data
  */
 export function deleteDiary (data) {
-  return request('delete', '/note/delete', { contentId: data })
+  return request('delete', '/note/delete', { 'contentId': data })
 }

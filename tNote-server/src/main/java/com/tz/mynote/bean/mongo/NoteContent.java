@@ -1,5 +1,7 @@
 package com.tz.mynote.bean.mongo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,13 @@ import java.util.Date;
 @AllArgsConstructor
 @Document(collection="NoteContent")
 public class NoteContent {
+    /**
+     * @JsonSerialize(using=ToStringSerializer.class)
+     * 这个注解可以让Long类型字段转给前端string，防止精度丢失
+     */
     @Id
-    private Long id;
+//    @JsonSerialize(using= ToStringSerializer.class)
+    private String id;
     /**
      * 标题
      */
@@ -44,7 +51,7 @@ public class NoteContent {
      * 父id，即所属类别
      */
     @Indexed
-    private Long itemId;
+    private String itemId;
     /**
      * 创建人
      */

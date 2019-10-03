@@ -124,7 +124,8 @@ export default {
       loading: false, // 加载
       formLabelWidth: '80px', // 抽屉label
       noteType: '',
-      loginUser: JSON.parse(localStorage.getItem('userInfo')).realName
+      loginUser: JSON.parse(localStorage.getItem('userInfo')).realName,
+      link: '' // 当前选中的分类
     }
   },
   computed: {
@@ -280,10 +281,11 @@ export default {
       if (item === undefined) {
         return
       }
+      this.link = item.id
       DiaryApi.getNoteByItem({ itemId: item.id }).then(res => {
+        console.log('获取日记', res)
         this.showEdit = false
         if (res.code === 200) {
-          console.log('获取日记', res)
           this.diaryData = res.data
         } else {
           this.diaryData = []
@@ -312,6 +314,8 @@ export default {
       console.log('保存参数', item)
       DiaryApi.save(item).then(res => {
         if (res.code === 200) {
+          // 添加此id防止保存一次成功之后再次添加没有id进行重复添加
+          this.form.id = res.data.id
           this.$message({
             message: res.msg,
             type: 'success'
@@ -336,9 +340,15 @@ export default {
      * 删除
      */
     handleDelete (row) {
-      console.log('删除数据', row)
       DiaryApi.deleteDiary(row.id).then(res => {
-        console.log('shanchu >>>', res)
+        if (res.code === 200) {
+          console.log('删除数据返回', res)
+          this.getDiary({ id: res.data[0].itemId })
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+        }
       })
     }
   },

@@ -12,5 +12,5 @@ public class CommonConstant {
      */
     public static final Integer ITEM = 1;
     public static final Integer FILE = 0;
-    public static final Long BASE_ITEM = 97L;
+    public static final String BASE_ITEM = "97";
 }
