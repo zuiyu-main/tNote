@@ -1,6 +1,7 @@
 # 环境搭建
 # mysql  
 数据库名： mynote
+生产数据库：mynote_pro
 账号： root
 密码： root
 端口： 3306
@@ -14,6 +15,7 @@ ip： localhost
 ip： localhost
 端口： 27017
 库名： tNote
+生产： tNote_pro
 # 启动
 环境连接好，启动MyNoteApplication即可
 # swagger文档访问
