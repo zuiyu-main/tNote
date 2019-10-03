@@ -44,4 +44,4 @@ http://localhost:2000/swagger-ui.html
 第一步：先package 打包生成jar文件
 第二步：配置docker插件配置，运行生成镜像和容器
 配置截图
-![image](https://github.com/TianPuJun/tNote/tree/master/tNote-server/src/main/resources/img/docker_run_setter.png)
+![image](https://github.com/TianPuJun/tNote/blob/master/tNote-server/src/main/resources/img/docker_run_setter.png)
