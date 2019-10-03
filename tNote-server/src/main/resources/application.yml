@@ -11,11 +11,11 @@ spring:
     allow-bean-definition-overriding: true
   data:
     mongodb:
-      uri: mongodb://localhost/tNote
+      uri: mongodb://tz_mongo/tNote_pro
       port: 27017
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource #Druid连接池
-    url: jdbc:mysql://localhost:3306/mynote?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&nullCatalogMeansCurrent=true
+    url: jdbc:mysql://tz_mysql:3306/mynote_pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&nullCatalogMeansCurrent=true
     username: root #数据库用户名
     password: root #数据库密码
     driver-class-name: com.mysql.cj.jdbc.Driver #mysql驱动
@@ -27,7 +27,7 @@ spring:
     minEvictableIdleTimeMillis: 30000 #配置一个连接在池中最小生存的时间，单位是毫秒
     validationQuery: SELECT 'x' #测试连接
   redis:
-    host: 127.0.0.1
+    host: tz_redis
     database: 0
     password: redis
     port: 6379
