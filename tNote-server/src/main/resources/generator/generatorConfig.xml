@@ -34,8 +34,8 @@
                              type="XMLMAPPER"/>
 
 
-        <table tableName="note_log"><generatedKey column="id" sqlStatement="JDBC"/></table>
-        <table tableName="note_organization"><generatedKey column="id" sqlStatement="JDBC"/></table>
-        <table tableName="note_users"><generatedKey column="id" sqlStatement="JDBC"/></table>
+<!--        <table tableName="note_log"><generatedKey column="id" sqlStatement="JDBC"/></table>-->
+<!--        <table tableName="note_organization"><generatedKey column="id" sqlStatement="JDBC"/></table>-->
+        <table tableName="note_encryption"><generatedKey column="id" sqlStatement="JDBC"/></table>
     </context>
 </generatorConfiguration>

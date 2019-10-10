@@ -366,7 +366,7 @@ export default {
   }
 }
 </script>
-<style >
+<style>
 html,
 body,
 #app {

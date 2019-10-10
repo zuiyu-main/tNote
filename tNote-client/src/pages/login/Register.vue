@@ -153,7 +153,7 @@ export default {
   }
 }
 </script>
-<style >
+<style scoped>
 /**label颜色 */
 .el-form-item__label {
   color: #606266 !important;

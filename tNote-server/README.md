@@ -47,3 +47,5 @@ http://localhost:2000/swagger-ui.html
 第二步：配置docker插件配置，运行生成镜像和容器
 配置截图
 ![image](https://github.com/TianPuJun/tNote/blob/master/tNote-server/src/main/resources/img/docker_run_setter.png)
+6. 运行命令指定配置文件
+--spring.profiles.active=dev

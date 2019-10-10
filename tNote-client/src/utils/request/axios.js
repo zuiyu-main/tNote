@@ -6,7 +6,7 @@ var instance = axios.create({
     'Content-Type': 'application/json'
   },
   timeout: 30000,
-  baseURL: 'http://127.0.0.1:2000/' // 接口请求地址
+  baseURL: process.env.API_ROOT // 接口请求地址
 })
 
 // 可以在这先申明错误代码表示的含义

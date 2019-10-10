@@ -137,7 +137,7 @@ export default {
   }
 }
 </script>
-<style >
+<style scoped>
 .homepage-hero-module,
 .video-container {
   position: relative;

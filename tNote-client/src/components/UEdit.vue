@@ -36,7 +36,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 #edui1,
 #editor,
 #edui1_iframeholder {

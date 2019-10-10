@@ -60,7 +60,7 @@ export default {
   }
 }
 </script>
-    <style>
+    <style scoped>
 #editor {
   width: 100%;
   height: 580px;
