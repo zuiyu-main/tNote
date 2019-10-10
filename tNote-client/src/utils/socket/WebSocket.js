@@ -1,17 +1,19 @@
 var UUID = require('uuid')
 var websock = null
 var globalCallback = null
-var serverPort = '2000'
+// var serverPort = '2000'
 var CLIENTID = UUID.v4()
 // webSocket连接端口
 
-function getWebIP () {
-  var curIP = window.location.hostname
-  return curIP
-}
+// function getWebIP () {
+//   var curIP = window.location.hostname
+//   return curIP
+// }
 export function initWebSocket () { // 初始化weosocket
   // ws地址
-  var wsuri = 'ws://' + getWebIP() + ':' + serverPort + '/websocket/' + CLIENTID
+  // var wsuri = 'ws://' + getWebIP() + ':' + serverPort + '/websocket/' + CLIENTID
+  var wsuri = 'ws://' + process.env.API_ROOT + '/websocket/' + CLIENTID
+
   websock = new WebSocket(wsuri)
   websock.onmessage = function (e) {
     websocketonmessage(e)
