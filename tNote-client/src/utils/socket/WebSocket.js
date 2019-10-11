@@ -12,7 +12,7 @@ var CLIENTID = UUID.v4()
 export function initWebSocket () { // 初始化weosocket
   // ws地址
   // var wsuri = 'ws://' + getWebIP() + ':' + serverPort + '/websocket/' + CLIENTID
-  var wsuri = 'ws://' + process.env.API_ROOT + '/websocket/' + CLIENTID
+  var wsuri = 'ws://' + process.env.WEB_SOCKET + '/websocket/' + CLIENTID
 
   websock = new WebSocket(wsuri)
   websock.onmessage = function (e) {
