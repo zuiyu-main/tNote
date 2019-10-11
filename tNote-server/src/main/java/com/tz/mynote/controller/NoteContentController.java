@@ -2,22 +2,19 @@ package com.tz.mynote.controller;
 
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.UserLoginToken;
-import com.tz.mynote.bean.VO.NoteContentVO;
-import com.tz.mynote.bean.VO.NoteEncryptionVO;
+import com.tz.mynote.bean.vo.NoteContentVO;
 import com.tz.mynote.bean.mongo.NoteContent;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.service.NoteContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Result;
 import java.util.Map;
 
 /**

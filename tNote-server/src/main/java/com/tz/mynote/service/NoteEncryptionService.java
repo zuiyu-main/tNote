@@ -1,6 +1,6 @@
 package com.tz.mynote.service;
 
-import com.tz.mynote.bean.VO.NoteEncryptionVO;
+import com.tz.mynote.bean.vo.NoteEncryptionVO;
 import com.tz.mynote.common.bean.ResultBean;
 
 import javax.servlet.http.HttpServletRequest;

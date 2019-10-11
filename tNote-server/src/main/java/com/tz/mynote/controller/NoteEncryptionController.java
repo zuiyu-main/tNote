@@ -2,7 +2,7 @@ package com.tz.mynote.controller;
 
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.UserLoginToken;
-import com.tz.mynote.bean.VO.NoteEncryptionVO;
+import com.tz.mynote.bean.vo.NoteEncryptionVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.common.dao.UpdateService;

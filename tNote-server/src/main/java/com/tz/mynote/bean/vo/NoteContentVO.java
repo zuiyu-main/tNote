@@ -1,4 +1,4 @@
-package com.tz.mynote.bean.VO;
+package com.tz.mynote.bean.vo;
 
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.common.dao.UpdateService;

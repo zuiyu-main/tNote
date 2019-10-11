@@ -1,6 +1,6 @@
 package com.tz.mynote.service;
 
-import com.tz.mynote.bean.VO.NoteContentVO;
+import com.tz.mynote.bean.vo.NoteContentVO;
 import com.tz.mynote.bean.mongo.NoteContent;
 import com.tz.mynote.common.bean.ResultBean;
 

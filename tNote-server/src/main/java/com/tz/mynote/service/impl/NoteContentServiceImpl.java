@@ -1,9 +1,8 @@
 package com.tz.mynote.service.impl;
 
-import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.tz.mynote.bean.NoteUsers;
-import com.tz.mynote.bean.VO.NoteContentVO;
+import com.tz.mynote.bean.vo.NoteContentVO;
 import com.tz.mynote.bean.mongo.NoteContent;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.constant.CommonConstant;

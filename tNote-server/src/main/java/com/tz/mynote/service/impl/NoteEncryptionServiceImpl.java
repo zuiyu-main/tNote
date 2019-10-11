@@ -1,7 +1,7 @@
 package com.tz.mynote.service.impl;
 
 import com.tz.mynote.bean.NoteEncryption;
-import com.tz.mynote.bean.VO.NoteEncryptionVO;
+import com.tz.mynote.bean.vo.NoteEncryptionVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.dao.NoteEncryptionMapper;
 import com.tz.mynote.service.NoteEncryptionService;

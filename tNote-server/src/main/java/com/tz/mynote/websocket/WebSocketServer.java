@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.websocket.OnClose;
@@ -133,5 +134,17 @@ public class WebSocketServer {
         WebSocketServer.onlineCount--;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WebSocketServer that = (WebSocketServer) o;
+        return Objects.equals(session, that.session) &&
+                Objects.equals(sid, that.sid);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(session, sid);
+    }
 }

@@ -1,10 +1,9 @@
 package com.tz.mynote.service.impl;
 
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.tz.mynote.bean.NoteUsers;
-import com.tz.mynote.bean.VO.NoteUsersVO;
+import com.tz.mynote.bean.vo.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.constant.Login;
 import com.tz.mynote.constant.RedisKey;
@@ -26,7 +25,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 

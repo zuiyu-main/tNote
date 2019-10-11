@@ -1,11 +1,7 @@
 package com.tz.mynote.aop;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.mongodb.util.JSON;
 import com.tz.mynote.annotation.OptionalLog;
-import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.bean.NoteLog;
-import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.service.LogService;
 import com.tz.mynote.util.GsonUtil;
 import com.tz.mynote.util.LoginInfoUtil;
@@ -16,12 +12,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -81,7 +75,7 @@ public class LogAopAction {
         }
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getRemoteAddr();
-            if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+            if ("127.0.0.1".equals(ipAddress)|| "0:0:0:0:0:0:0:1".equals(ipAddress)) {
                 //根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {
@@ -148,10 +142,10 @@ public class LogAopAction {
                     //接受客户端的数据
                     Map<String, String[]> map = request.getParameterMap();
                     // 解决获取参数乱码
-                    Map<String, String[]> newmap = new HashMap<String, String[]>();
+                    Map<String, String[]> newmap = new HashMap<String, String[]>(16);
                     for (Map.Entry<String, String[]> entry : map.entrySet()) {
                         String name = entry.getKey();
-                        String values[] = entry.getValue();
+                        String[] values = entry.getValue();
 
                         if (values == null) {
                             newmap.put(name, new String[]{});
@@ -176,16 +170,16 @@ public class LogAopAction {
                     //接受客户端的数据
                     Map<String, String[]> map = request.getParameterMap();
                     // 解决获取参数乱码
-                    Map<String, String[]> newmap = new HashMap<String, String[]>();
+                    Map<String, String[]> newmap = new HashMap<String, String[]>(16);
                     for (Map.Entry<String, String[]> entry : map.entrySet()) {
                         String name = entry.getKey();
-                        String values[] = entry.getValue();
+                        String[] values = entry.getValue();
 
                         if (values == null) {
                             newmap.put(name, new String[]{});
                             continue;
                         }
-                        String newvalues[] = new String[values.length];
+                        String[] newvalues = new String[values.length];
                         for (int i = 0; i < values.length; i++) {
                             String value = values[i];
                             value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());

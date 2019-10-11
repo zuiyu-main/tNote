@@ -1,29 +1,19 @@
 package com.tz.mynote.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.PassToken;
 import com.tz.mynote.annotation.UserLoginToken;
-import com.tz.mynote.bean.NoteUsers;
-import com.tz.mynote.bean.VO.NoteUsersVO;
+import com.tz.mynote.bean.vo.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.service.NoteUserService;
-import com.tz.mynote.util.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author tz

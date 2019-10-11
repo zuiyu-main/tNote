@@ -1,13 +1,9 @@
-package com.tz.mynote.bean.VO;
+package com.tz.mynote.bean.vo;
 
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.common.dao.UpdateService;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
