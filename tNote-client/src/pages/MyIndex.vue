@@ -1,40 +1,55 @@
 <template>
   <div class="hei">
     <el-container class="hei">
-      <el-header style="text-align: right; font-size: 12px">
-        <el-link icon="el-icon-folder-add" :underline="false" @click="open">新建文件夹</el-link>
-
-        <el-dropdown>
-          <el-link icon="el-icon-document-add" :underline="false">新建日记</el-link>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item
-              icon="el-icon-circle-plus-outline"
-              @click.native="openEdit('html')"
-            >新建富文本</el-dropdown-item>
-            <el-dropdown-item
-              icon="el-icon-circle-plus-outline"
-              @click.native="openEdit('md')"
-            >新建MarkDown</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown @command="handleCommand">
-          <el-link :underline="false">
-            {{loginUser}}
-            <i class="el-icon-setting" style="margin-right: 15px"></i>
-          </el-link>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-header>
+      <el-aside width="200px">
+        <!-- <li v-for="(item,index) in itemData " :key="index">
+          <el-button type="text" icon="el-icon-folder" @click="getDiary(item)">{{item.title}}</el-button>
+        </li>-->
+        <el-menu :default-openeds="['1']">
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-s-promotion"></i>我的分类
+            </template>
+            <el-menu-item
+              v-for="(item,index) in itemData "
+              :key="index"
+              :index="item.id.toString()"
+              @click="getDiary(item)"
+            >
+              <i class="el-icon-folder"></i>
+              {{item.title}}
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
       <el-container class="hei">
-        <el-aside width="200px">
-          <li v-for="(item,index) in itemData " :key="index">
-            <el-button type="text" icon="el-icon-folder" @click="getDiary(item)">{{item.title}}</el-button>
+        <el-header style="text-align: right; font-size: 12px">
+          <div class="el-title">
+            <el-link icon="el-icon-folder-add" :underline="false" @click="open">新建文件夹</el-link>
+            <el-dropdown>
+              <el-link icon="el-icon-document-add" :underline="false">新建日记</el-link>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  icon="el-icon-circle-plus-outline"
+                  @click.native="openEdit('html')"
+                >新建富文本</el-dropdown-item>
+                <el-dropdown-item
+                  icon="el-icon-circle-plus-outline"
+                  @click.native="openEdit('md')"
+                >新建MarkDown</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
 
-            <!-- <el-button type="text" @click="getDiary(item)">{{item.title}}</el-button> -->
-          </li>
-        </el-aside>
+          <div class="el-setter">
+            <el-dropdown @command="handleCommand">
+              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </el-header>
         <el-main style="padding: 0px;">
           <div v-if="showEdit" class="hei">
             <el-input v-model="form.name" placeholder="日记名称">
@@ -379,7 +394,15 @@ body,
   text-align: center;
   line-height: 60px;
 }
-
+.el-menu,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
+.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+  background-color: #d3dce6 !important;
+}
+.el-menu {
+  background-color: #d3dce6;
+}
 .el-aside {
   background-color: #d3dce6;
   color: #333;
@@ -388,7 +411,7 @@ body,
 }
 
 .el-main {
-  background-color: #e9eef3;
+  /* background-color: #e9eef3; */
   color: #333;
   text-align: center;
   /* padding: 0px; */
@@ -425,5 +448,13 @@ li {
 }
 .el-form-item__label {
   color: #606266 !important;
+}
+.el-title {
+  position: absolute;
+}
+.el-setter {
+  position: absolute;
+  top: 1%;
+  right: 1%;
 }
 </style>
