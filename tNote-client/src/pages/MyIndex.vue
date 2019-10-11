@@ -35,7 +35,7 @@
             <!-- <el-button type="text" @click="getDiary(item)">{{item.title}}</el-button> -->
           </li>
         </el-aside>
-        <el-main>
+        <el-main style="padding: 0px;">
           <div v-if="showEdit" class="hei">
             <el-input v-model="form.name" placeholder="日记名称">
               <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
@@ -391,7 +391,7 @@ body,
   background-color: #e9eef3;
   color: #333;
   text-align: center;
-  padding: 0px;
+  /* padding: 0px; */
   /* line-height: 160px; */
 }
 
