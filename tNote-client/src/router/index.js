@@ -3,7 +3,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 // https://juejin.im/post/5b5bfd5b6fb9a04fdd7d687a
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/',
