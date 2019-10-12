@@ -51,3 +51,28 @@ CREATE TABLE `note_log` (
   `commit` tinyint(2) NOT NULL COMMENT '执行描述（1:执行成功、2:执行失败）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+/**
+  note_tag
+ */
+CREATE TABLE `note_tag` (
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                            `title` varchar(45) NOT NULL COMMENT '机构名称',
+                            `desc` varchar(45) NOT NULL COMMENT '描述',
+                            `create` bigint(20) NOT NULL COMMENT '创建者',
+                            `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+                            `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+                            `deleted` tinyint(2) NOT NULL DEFAULT '0' COMMENT '删除标记 0 正常1 删除',
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+/**
+  加密
+ */
+CREATE TABLE `note_encryption` (
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                   `target_id` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '加密对象id',
+                                   `password` varchar(45) NOT NULL COMMENT '密码',
+                                   `gmt_create` datetime NOT NULL COMMENT '创建时间',
+                                   `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                                   `deleted` tinyint(2) NOT NULL DEFAULT '0' COMMENT '删除标记0 false，1true',
+                                   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='加密文件夹'

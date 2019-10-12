@@ -20,7 +20,7 @@ ip： localhost
 环境连接好，启动MyNoteApplication即可
 # swagger文档访问
 http://localhost:2000/swagger-ui.html
-#generator生成代码
+# generator生成代码
 1. 打开本目录下resources/generator/generatorConfig.xml文件
 2. 修改绝对地址，targetProject为生成的代码位置，targetPackage为目标包名
 `
