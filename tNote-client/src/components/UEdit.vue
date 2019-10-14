@@ -41,5 +41,6 @@ export default {
 #editor,
 #edui1_iframeholder {
   height: 100% !important;
+  width: 100% !important;
 }
 </style>
