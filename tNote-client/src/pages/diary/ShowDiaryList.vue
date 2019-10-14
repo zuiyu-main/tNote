@@ -7,8 +7,7 @@
             :underline="false"
             icon="el-icon-view el-icon--right"
             :title="scope.row.title"
-            class="el-title"
-          >{{ scope.row.title }}</el-link>
+          >{{ scope.row.title | ellipsis}}</el-link>
         </span>
       </template>
     </el-table-column>
@@ -57,6 +56,15 @@ export default {
     diaryData: {
       type: Array,
       required: true
+    }
+  },
+  filters: {
+    ellipsis (value) {
+      if (!value) return ''
+      if (value.length > 10) {
+        return value.slice(0, 10) + '...'
+      }
+      return value
     }
   },
   data () {
