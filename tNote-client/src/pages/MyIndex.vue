@@ -125,7 +125,7 @@ export default {
     UEdit,
     ShowDiary
   },
-  data() {
+  data () {
     return {
       itemData: [], // 分类数据
       diaryData: [], // 当前日记数据
@@ -154,14 +154,14 @@ export default {
     })
   },
   watch: {
-    showContent(data) {
+    showContent (data) {
       console.log('监听store', data)
       this.showEditContent(data)
     }
   },
   methods: {
     ...mapActions('diary', ['setData']),
-    open() {
+    open () {
       this.$prompt('请输入新分类名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -197,10 +197,10 @@ export default {
     /**
      * 抽屉提交
      */
-    submit() {
+    submit () {
       this.drawer = true
     },
-    handleClose(done) {
+    handleClose (done) {
       this.$confirm('确定要提交表单吗？')
         .then(_ => {
           this.loading = true
@@ -215,7 +215,7 @@ export default {
     /**
      * websocket
      */
-    getConfigResult(data) {
+    getConfigResult (data) {
       if (data.status === 404 && data.msg === 'logout') {
         this.$notify({
           title: '退出登录提醒',
@@ -248,7 +248,7 @@ export default {
     /**
      * 移除用户信息
      */
-    removeUserInfo() {
+    removeUserInfo () {
       localStorage.removeItem('userInfo')
       localStorage.removeItem('loginInfo')
       localStorage.removeItem('token')
@@ -257,7 +257,7 @@ export default {
     /**
      * 用户下限
      */
-    handleCommand(command) {
+    handleCommand (command) {
       if (command === 'logout') {
         LogOut()
           .then(res => {
@@ -274,7 +274,7 @@ export default {
     /**
      * 初始化分类
      */
-    initItem() {
+    initItem () {
       DiaryApi.getItem().then(res => {
         if (res.code === 200) {
           this.itemData = res.data
@@ -287,7 +287,7 @@ export default {
     /**
      * 展示编辑器
      */
-    openEdit(type) {
+    openEdit (type) {
       this.edit.content = ''
       this.form = {}
       this.noteType = type
@@ -296,7 +296,7 @@ export default {
     /**
      * 获取日记
      */
-    getDiary(item) {
+    getDiary (item) {
       if (item === undefined) {
         return
       }
@@ -315,7 +315,7 @@ export default {
     /**
      * 保存文件内容
      */
-    saveContent() {
+    saveContent () {
       const suffix = this.noteType
       if (suffix === 'html') {
         this.edit.content = this.$refs.ue.getUEContent()
@@ -347,7 +347,7 @@ export default {
     /**
      * 展示编辑器内容
      */
-    showEditContent(data) {
+    showEditContent (data) {
       this.showEdit = true
       this.noteType = data.suffix
       this.edit.content = data.content
@@ -358,7 +358,7 @@ export default {
     /**
      * 删除
      */
-    handleDelete(row) {
+    handleDelete (row) {
       DiaryApi.deleteDiary(row.id).then(res => {
         if (res.code === 200) {
           console.log('删除数据返回', res)
@@ -371,7 +371,7 @@ export default {
       })
     }
   },
-  mounted() {
+  mounted () {
     const token = Check.checkToken()
     if (!token) {
       this.$message.error('token过期，请重新登录')
