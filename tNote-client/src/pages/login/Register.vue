@@ -39,6 +39,8 @@
 
 <script>
 import * as UserService from '@/api/user/login'
+import { cryptPwd } from '@/utils/Check'
+
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -103,8 +105,8 @@ export default {
         if (valid) {
           const params = {
             userName: this.ruleForm.name,
-            password: this.ruleForm.pass,
-            password2: this.ruleForm.checkPass,
+            password: cryptPwd(this.ruleForm.pass),
+            password2: cryptPwd(this.ruleForm.checkPass),
             realName: this.ruleForm.realName,
             orgId: 10010
           }

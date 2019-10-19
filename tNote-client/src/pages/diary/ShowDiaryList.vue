@@ -42,7 +42,12 @@
     <el-table-column label="操作">
       <template slot-scope="scope">
         <el-button size="mini" @click="showContent(scope.row)">编辑</el-button>
-        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        <el-button
+          size="mini"
+          v-if="showDeleteBtn"
+          type="danger"
+          @click="handleDelete(scope.$index, scope.row)"
+        >删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -71,7 +76,11 @@ export default {
     return {
       dynamicTags: ['标签一', '标签二', '标签三'],
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      showDeleteBtn:
+        localStorage.getItem('showDeleteBtn') === null
+          ? false
+          : localStorage.getItem('showDeleteBtn') // 是否显示删除按钮
       // tableData: [
       //   {
       //     date: '2016-05-02',

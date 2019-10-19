@@ -15,7 +15,7 @@ CREATE TABLE `test_ta` (
 CREATE TABLE `note_users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(45) NOT NULL COMMENT '登录名',
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '加密之后的密码',
+  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '加密之后的密码',
   `real_name` varchar(45) NOT NULL COMMENT '用户真实姓名',
   `slat` varchar(45) NOT NULL COMMENT '密码加密的盐',
   `org_id` varchar(45) NOT NULL COMMENT '机构id',
@@ -70,7 +70,7 @@ CREATE TABLE `note_tag` (
 CREATE TABLE `note_encryption` (
                                    `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                    `target_id` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '加密对象id',
-                                   `password` varchar(45) NOT NULL COMMENT '密码',
+                                   `password` varchar(64) NOT NULL COMMENT '密码',
                                    `gmt_create` datetime NOT NULL COMMENT '创建时间',
                                    `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                    `deleted` tinyint(2) NOT NULL DEFAULT '0' COMMENT '删除标记0 false，1true',

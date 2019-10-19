@@ -178,7 +178,12 @@ public class NoteUserServiceImpl implements NoteUserService {
      * @return
      */
     private boolean checkPassWord(String passWord,String realPassWord){
-        boolean verify = PasswordUtil.verify(passWord, realPassWord);
-        return verify;
+        try {
+            boolean verify = PasswordUtil.verify(passWord, realPassWord);
+            return verify;
+        }catch (Exception e){
+            log.error("登录密码校验，密码验证不通过,错误信息=【{}】",e.getMessage());
+            return false;
+        }
     }
 }

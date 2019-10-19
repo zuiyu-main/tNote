@@ -37,7 +37,7 @@
           <!-- <li v-for="(item,index) in itemData " :key="index">
           <el-button type="text" icon="el-icon-folder" @click="getDiary(item)">{{item.title}}</el-button>
           </li>-->
-          <el-menu :default-openeds="['1']">
+          <el-menu :default-openeds="['1']" :unique-opened="false">
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-s-promotion"></i>我的分类
@@ -51,6 +51,25 @@
                 <i class="el-icon-folder"></i>
                 {{item.title}}
               </el-menu-item>
+            </el-submenu>
+
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-setting"></i>我的设置
+              </template>
+              <el-menu-item index="2-1" @click="link = 'setter'">
+                <i class="el-icon-folder"></i>
+                日记设置
+              </el-menu-item>
+              <!-- <el-menu-item
+                v-for="(item,index) in itemData "
+                :key="index"
+                :index="item.id.toString()"
+                @click="getDiary(item)"
+              >
+                <i class="el-icon-folder"></i>
+                {{item.title}}
+              </el-menu-item>-->
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -102,7 +121,8 @@
             </el-drawer>
           </div>
           <div v-else>
-            <show-diary :diaryData="diaryData" @handleDelete="handleDelete"></show-diary>
+            <show-diary v-if="link === 'show'" :diaryData="diaryData" @handleDelete="handleDelete"></show-diary>
+            <setter-content v-else-if="link === 'setter'"></setter-content>
           </div>
         </el-main>
       </el-container>
@@ -118,12 +138,14 @@ import ShowDiary from '@/pages/diary/ShowDiaryList'
 import * as DiaryApi from '@/api/diary/Diary'
 import * as Check from '@/utils/Check'
 import { LogOut } from '@/api/user/login'
+import SetterContent from '@/pages/diary/SetterContent'
 export default {
   name: 'index',
   components: {
     MarkDown,
     UEdit,
-    ShowDiary
+    ShowDiary,
+    SetterContent
   },
   data () {
     return {
@@ -144,7 +166,7 @@ export default {
       formLabelWidth: '80px', // 抽屉label
       noteType: '',
       loginUser: JSON.parse(localStorage.getItem('userInfo')).realName,
-      link: '' // 当前选中的分类
+      link: '' // 当前内容区域显示
     }
   },
   computed: {
@@ -216,6 +238,7 @@ export default {
      * websocket
      */
     getConfigResult (data) {
+      console.log('websocel', data)
       if (data.status === 404 && data.msg === 'logout') {
         this.$notify({
           title: '退出登录提醒',
@@ -300,7 +323,7 @@ export default {
       if (item === undefined) {
         return
       }
-      this.link = item.id
+      this.link = 'show'
       DiaryApi.getNoteByItem({ itemId: item.id }).then(res => {
         console.log('获取日记', res)
         this.showEdit = false

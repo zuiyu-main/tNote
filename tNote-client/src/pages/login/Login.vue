@@ -20,13 +20,18 @@
           </el-form-item>
           <el-form-item>
             <el-radio-group v-model="form.resource">
-              <el-radio label="自动登录"></el-radio>
+              <el-link
+                icon="el-icon-user"
+                class="register_title"
+                href="/#/register"
+                :underline="false"
+              >注册</el-link>
               <el-radio label="记住密码"></el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">登录</el-button>
-            <el-button @click="register">注册</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -36,6 +41,7 @@
 
 <script>
 import { userLogin } from '@/api/user/login'
+import { cryptPwd } from '@/utils/Check'
 export default {
   name: 'login',
   components: {},
@@ -71,10 +77,10 @@ export default {
     /**
      * 提交登录请求
      */
-    onSubmit () {
+    onSubmit (type) {
       const params = {
         userName: this.form.name,
-        password: this.form.password
+        password: cryptPwd(this.form.password)
       }
       userLogin(params).then(res => {
         if (res.code === 200) {
@@ -100,6 +106,10 @@ export default {
      */
     register () {
       this.$router.push('/register')
+    },
+    resetForm (formName) {
+      console.log(formName)
+      this.form = {}
     }
   },
   mounted: function () {
@@ -132,7 +142,7 @@ export default {
     window.onresize()
     // 自动登录
     if (this.form.resource === '自动登录') {
-      this.onSubmit()
+      this.onSubmit('auto')
     }
   }
 }
@@ -162,7 +172,11 @@ export default {
   left: 37%;
   z-index: 1;
 }
-.el-form-item__label {
-  color: aliceblue !important;
+
+.register_title {
+  top: 34%;
+  margin: auto;
+  position: absolute;
+  left: 65%;
 }
 </style>

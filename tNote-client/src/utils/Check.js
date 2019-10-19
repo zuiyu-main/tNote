@@ -1,3 +1,5 @@
+var crypto = require('crypto')
+
 /**
  * 检测json数据
  * @param {} str
@@ -28,4 +30,13 @@ export function checkToken () {
   } else {
     return false
   }
+}
+/**
+ * 生成md5
+ *
+ * @param {s} password
+ */
+export function cryptPwd (password) {
+  let md5 = crypto.createHash('md5')
+  return md5.update(password).digest('hex')
 }
