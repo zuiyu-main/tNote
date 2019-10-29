@@ -12,7 +12,6 @@ import java.util.Date;
  */
 @Data
 public class NoteEncryptionVO {
-    @NotEmpty(message = "the parameter id must not be null" ,groups = UpdateService.class)
     private Long id;
 
     /**

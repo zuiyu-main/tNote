@@ -57,10 +57,7 @@
               <template slot="title">
                 <i class="el-icon-setting"></i>我的设置
               </template>
-              <el-menu-item index="2-1" @click="link = 'setter'">
-                <i class="el-icon-folder"></i>
-                日记设置
-              </el-menu-item>
+              <el-menu-item index="2-1" @click="link = 'setter'">日记</el-menu-item>
               <!-- <el-menu-item
                 v-for="(item,index) in itemData "
                 :key="index"
@@ -139,6 +136,8 @@ import * as DiaryApi from '@/api/diary/Diary'
 import * as Check from '@/utils/Check'
 import { LogOut } from '@/api/user/login'
 import SetterContent from '@/pages/diary/SetterContent'
+import * as EncryptionApi from '@/api/diary/Encryption'
+
 export default {
   name: 'index',
   components: {
@@ -324,7 +323,44 @@ export default {
         return
       }
       this.link = 'show'
-      DiaryApi.getNoteByItem({ itemId: item.id }).then(res => {
+      EncryptionApi.check({ targetId: item.id }).then(check => {
+        console.log(check)
+        // false 没有加密 true 加密
+        if (check.code === 200 && check.data === false) {
+          this.getNoteByItem(item.id)
+        } else {
+          this.$prompt('请输入密码', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputType: 'password'
+          })
+            .then(({ value }) => {
+              const params = {
+                targetId: item.id,
+                password: Check.cryptPwd(value)
+              }
+              EncryptionApi.verify(params).then(res => {
+                if (res.code === 200 && res.data === true) {
+                  this.getNoteByItem(item.id)
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.msg
+                  })
+                }
+              })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '取消输入'
+              })
+            })
+        }
+      })
+    },
+    getNoteByItem (params) {
+      DiaryApi.getNoteByItem({ itemId: params }).then(res => {
         console.log('获取日记', res)
         this.showEdit = false
         if (res.code === 200) {

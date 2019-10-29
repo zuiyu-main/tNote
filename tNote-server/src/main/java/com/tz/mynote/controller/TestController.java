@@ -2,6 +2,7 @@ package com.tz.mynote.controller;
 
 import com.tz.mynote.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +20,10 @@ public class TestController {
     @RequestMapping("/hello")
     public Object hello(){
         return testService.hello();
+    }
+    @GetMapping("/error")
+    public String error(){
+        int i = 1/0;
+        return "sdf";
     }
 }

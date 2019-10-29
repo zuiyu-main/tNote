@@ -1,22 +1,10 @@
 package com.tz.mynote.advice;
 
-import com.alibaba.fastjson.JSON;
 import com.tz.mynote.common.bean.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tz
@@ -25,12 +13,20 @@ import java.util.Map;
  * @Date 2019-09-07 17:53
  */
 @Slf4j
-@org.springframework.web.bind.annotation.ControllerAdvice
-@RestController
+@RestControllerAdvice
+@Component
 public class ControllerAdvice {
     @ExceptionHandler(value = Exception.class)
     public ResultBean errorHandler(Exception e){
-        e.printStackTrace();
+        log.error("发生异常，异常信息=[{}]",e.getMessage());
+        return  ResultBean.builder()
+                .msg(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .data(e.getMessage()).build();
+    }
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResultBean illegalArgumentException(IllegalArgumentException e){
+        log.error("发生2异常，异常信息=[{}]",e.getMessage());
         return  ResultBean.builder()
                 .msg(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())

@@ -11,12 +11,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author tz
@@ -39,9 +37,25 @@ public class NoteEncryptionController {
     }
     @PostMapping("/update")
     @UserLoginToken
-    @OptionalLog(module="日记加密", methods="修改密码")
-    @ApiOperation(value ="update",notes = "修改密码",tags = "日记加密区")
-    public ResultBean update(HttpServletRequest request, @RequestBody @Validated(value = UpdateService.class) NoteEncryptionVO noteEncryptionVO){
-        return noteEncryptionService.update(request,noteEncryptionVO);
+    @OptionalLog(module="日记加密", methods="重置密码")
+    @ApiOperation(value ="update",notes = "重置密码",tags = "日记加密区")
+    public ResultBean update(HttpServletRequest request, @RequestBody Map<String,String> params){
+        return noteEncryptionService.update(request,params);
     }
+    @GetMapping("/check")
+    @UserLoginToken
+    @OptionalLog(module = "日记加密",methods = "检查是否已经加密")
+    @ApiOperation(value ="check",notes = "查看是否加密",tags = "日记加密区")
+    public ResultBean check(HttpServletRequest request, @RequestParam String targetId,String password){
+        return noteEncryptionService.check(request,targetId,password);
+    }
+    @PostMapping("/verify")
+    @UserLoginToken
+    @OptionalLog(module = "日记加密",methods = "校验加密密码")
+    @ApiOperation(value ="verify",notes = "检查加密",tags = "日记加密区")
+    public ResultBean verify(HttpServletRequest request, @RequestBody Map<String,String> params){
+        return noteEncryptionService.verify(request,params.get("targetId"),params.get("password"));
+    }
+
+
 }
