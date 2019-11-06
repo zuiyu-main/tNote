@@ -2,6 +2,7 @@ package com.tz.mynote.bean.mongo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.tz.mynote.bean.NoteTag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author tz
@@ -62,6 +64,10 @@ public class NoteContent {
     @Indexed
     private Long authorId;
     /**
+     * 标签集合
+     */
+    private List<NoteTag> tagList;
+    /**
      * 创建时间
      */
     private Date gmtCreate;
@@ -73,5 +79,12 @@ public class NoteContent {
      * 删除标记 0 false默认。1删除
      */
     private Integer deleted;
+
+    /**
+     * 前端控制字段
+     * 是否 显示inout
+     *
+     */
+    private Boolean inputVisible = false;
 
 }

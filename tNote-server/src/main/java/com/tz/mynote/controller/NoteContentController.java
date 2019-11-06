@@ -1,5 +1,7 @@
 package com.tz.mynote.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.UserLoginToken;
 import com.tz.mynote.bean.vo.NoteContentVO;
@@ -47,28 +49,28 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="删除分类或笔记")
     @ApiOperation(value ="delete",notes = "删除分类或者日记内容",tags = "日记内容区")
-    public ResultBean<NoteContent> delete(HttpServletRequest request,@RequestBody Map<String,Object> params){
+    public ResultBean delete(HttpServletRequest request,@RequestBody Map<String,Object> params){
         return noteContentService.delete(request,params.get("contentId").toString());
     }
     @PutMapping("/updateTitle")
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="修改名称")
     @ApiOperation(value ="updateTitle",notes = "修改名称",tags = "日记内容区")
-    public ResultBean<NoteContent> updateTitle(HttpServletRequest request,@RequestParam String contentId,@RequestParam String title ){
+    public ResultBean updateTitle(HttpServletRequest request,@RequestParam String contentId,@RequestParam String title ){
         return noteContentService.updateTitle(request,contentId,title);
     }
     @PutMapping("/updateContent")
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="修改内容")
     @ApiOperation(value ="updateContent",notes = "修改内容",tags = "日记内容区")
-    public ResultBean<NoteContent> updateContent(HttpServletRequest request,@RequestParam String contentId,@RequestParam String content ){
+    public ResultBean updateContent(HttpServletRequest request,@RequestParam String contentId,@RequestParam String content ){
         return noteContentService.updateContent(request,contentId,content);
     }
     @GetMapping("/getItem")
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="获取我的分类")
     @ApiOperation(value ="getItem",notes = "获取我的分类",tags = "日记内容区")
-    public ResultBean<NoteContent> getItem(HttpServletRequest request){
+    public ResultBean getItem(HttpServletRequest request){
         return noteContentService.getItem(request);
     }
     @GetMapping("/getNoteByItem")
@@ -77,6 +79,14 @@ public class NoteContentController {
     @ApiOperation(value ="getNoteByItem",notes = "获取某个分类下面笔记",tags = "日记内容区")
     public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam String itemId){
         return noteContentService.getNoteByItem(request,itemId);
+    }
+
+    @PutMapping("/updateNoteTag")
+    @UserLoginToken
+    @OptionalLog(module="日记内容", methods="修改笔记标签")
+    @ApiOperation(value ="updateNoteTag",notes = "修改笔记标签",tags = "日记内容区")
+    public ResultBean updateNoteTag(HttpServletRequest request,@RequestBody Map<String,Object> params){
+        return noteContentService.updateNoteTag(request,params.get("contentId").toString(), JSONArray.toJSONString(params.get("tagList")));
     }
 
 

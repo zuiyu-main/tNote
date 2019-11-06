@@ -7,6 +7,7 @@ import com.tz.mynote.bean.vo.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.service.NoteUserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Description
  * @Date 2019-09-07 18:19
  */
+@Api(value = "NoteUserController",tags = "用户登录管理")
 @RestController
 @RequestMapping("/user")
 public class NoteUserController {

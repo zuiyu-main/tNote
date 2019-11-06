@@ -38,8 +38,6 @@ public class LogAopAction {
       */
     @Autowired
     private LogService logService;
-    @Autowired
-    private LoginInfoUtil loginInfoUtil;
 
     // 配置接入点，即为所要记录的action操作目录
 //    @Pointcut("execution(public * com.tz.mynote.controller..*.*(..))")
@@ -66,33 +64,9 @@ public class LogAopAction {
         noteLog.setGmtCreate(new Date());
 
         // 获取访问真实IP
-        String ipAddress = request.getHeader("x-forwarded-for");
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getRemoteAddr();
-            if ("127.0.0.1".equals(ipAddress)|| "0:0:0:0:0:0:0:1".equals(ipAddress)) {
-                //根据网卡取本机配置的IP
-                InetAddress inet = null;
-                try {
-                    inet = InetAddress.getLocalHost();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                ipAddress = inet.getHostAddress();
-            }
-        }
-        //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ipAddress != null && ipAddress.length() > 15) { //"***.***.***.***".length() = 15
-            if (ipAddress.indexOf(",") > 0) {
-                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
-            }
-        }
-
+        String ipAddress = LoginInfoUtil.getRequestIp(request);
+//        String address = LoginInfoUtil.getAddress(ipAddress);
+        noteLog.setActionAddress("address todo 后续使用");
         noteLog.setIp(ipAddress);
 
         // 拦截的实体类，就是当前正在执行的controller

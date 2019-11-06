@@ -28,3 +28,11 @@ export function getNoteByItem (data) {
 export function deleteDiary (data) {
   return request('delete', '/note/delete', { 'contentId': data })
 }
+/**
+ * 更新标签
+ * @param {contentId：123，
+ * tagList：[{},{}]} data
+ */
+export function updateNoteTag (data) {
+  return request('put', '/note/updateNoteTag', data)
+}

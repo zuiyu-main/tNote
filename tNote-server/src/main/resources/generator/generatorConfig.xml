@@ -36,6 +36,6 @@
 
 <!--        <table tableName="note_log"><generatedKey column="id" sqlStatement="JDBC"/></table>-->
 <!--        <table tableName="note_organization"><generatedKey column="id" sqlStatement="JDBC"/></table>-->
-        <table tableName="note_encryption"><generatedKey column="id" sqlStatement="JDBC"/></table>
+        <table tableName="note_tag"><generatedKey column="id" sqlStatement="JDBC"/></table>
     </context>
 </generatorConfiguration>

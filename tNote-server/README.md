@@ -49,17 +49,3 @@ http://localhost:2000/swagger-ui.html
 ![image](https://github.com/TianPuJun/tNote/blob/master/tNote-server/src/main/resources/img/docker_run_setter.png)
 6. 运行命令指定配置文件
 --spring.profiles.active=dev
-
-|--用户-- |-注册
-|        |-登录
-|        |-修改密码
-|        |-退出登录
-|--文件夹分类--  |-新建文件夹
-|              |-文件夹删除
-|              |-文件夹重命名
-|              |-查看我的文件夹
-|-- 文件--  |-新建markdown
-|          |-新建html
-|          |-修改文件内容
-|          |-删除文件
-         

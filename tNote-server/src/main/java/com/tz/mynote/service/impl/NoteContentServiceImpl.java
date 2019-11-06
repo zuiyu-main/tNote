@@ -1,6 +1,8 @@
 package com.tz.mynote.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.mongodb.client.result.UpdateResult;
+import com.tz.mynote.bean.NoteTag;
 import com.tz.mynote.bean.NoteUsers;
 import com.tz.mynote.bean.vo.NoteContentVO;
 import com.tz.mynote.bean.mongo.NoteContent;
@@ -8,11 +10,13 @@ import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.constant.CommonConstant;
 import com.tz.mynote.constant.FileSuffixEnum;
 import com.tz.mynote.constant.MongoCollectionName;
+import com.tz.mynote.dao.NoteTagMapper;
 import com.tz.mynote.dao.mongo.NoteContentDao;
 import com.tz.mynote.service.NoteContentService;
 import com.tz.mynote.util.LoginInfoUtil;
 import com.tz.mynote.util.SnowFlakeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Sort;
@@ -22,9 +26,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +50,8 @@ public class NoteContentServiceImpl implements NoteContentService {
     private LoginInfoUtil loginInfoUtil;
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private NoteTagMapper noteTagMapper;
     private static BeanCopier beanCopier = BeanCopier.create(NoteContentVO.class,NoteContent.class,false);
     private static SnowFlakeUtil SNOWFLAKEUTIL = new SnowFlakeUtil(1, 9);
 
@@ -70,7 +78,7 @@ public class NoteContentServiceImpl implements NoteContentService {
      * @return
      */
     @Override
-    public ResultBean<NoteContent> save(HttpServletRequest request, NoteContentVO noteContentVO) {
+    public ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO) {
         log.info("保存（分类）日记，接受参数=【{}】",noteContentVO);
         NoteContent content = new NoteContent();
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
@@ -99,7 +107,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> delete(HttpServletRequest request, String contentId) {
+    public ResultBean delete(HttpServletRequest request, String contentId) {
         log.info("删除（分类）日记，删除条件，id={}",contentId);
         Query query = new  Query(Criteria.where("id").is(contentId));
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class);
@@ -115,7 +123,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> updateTitle(HttpServletRequest request, String contentId, String title) {
+    public ResultBean updateTitle(HttpServletRequest request, String contentId, String title) {
         log.info("修改标题，修改参数,contentId={},title={}",contentId,title);
         Query query = new Query(Criteria.where("id").is(contentId));
         Update update = new  Update();
@@ -126,7 +134,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> updateContent(HttpServletRequest request, String contentId, String content) {
+    public ResultBean updateContent(HttpServletRequest request, String contentId, String content) {
         log.info("修改内容，修改参数,contentId={},title={}",contentId,content);
         Query query = new Query(Criteria.where("id").is(contentId));
         Update update = new  Update();
@@ -137,7 +145,7 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean<NoteContent> getItem(HttpServletRequest request) {
+    public ResultBean getItem(HttpServletRequest request) {
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
         Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(1).and("deleted").is(0));
         log.info("查询我的分类开始，query={}",query);
@@ -155,5 +163,56 @@ public class NoteContentServiceImpl implements NoteContentService {
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class, MongoCollectionName.NOTE_CONTENT);
         log.info("查询分类日记结束，查询结果={}",noteContents);
         return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).data(noteContents).total(noteContents.size()).build();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultBean updateNoteTag(HttpServletRequest request, String contentId, String tagList) {
+        NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
+        List<NoteTag> noteTags = null;
+        try {
+             noteTags = JSONArray.parseArray(tagList, NoteTag.class);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("更新日记标签失败，转换tagList失败,msg=[{}]",e.getMessage());
+        }
+        NoteContent content = noteContentDao.findById(contentId).orElse(null);
+        if(null == content){
+            return ResultBean.notFound("笔记内容未找到");
+        }
+        if(CollectionUtils.isEmpty(noteTags)){
+            // 文章标签设置为空
+            content.setTagList(new ArrayList<>());
+        }else{
+            // 循环标签是否标签库已存在，不存在添加，最后覆盖文章标签list
+            try {
+                noteTags.parallelStream().forEach(e->{
+                    NoteTag sel = new NoteTag();
+                    sel.setTitle(e.getTitle());
+                    List<NoteTag> select = noteTagMapper.select(sel);
+                    if (CollectionUtils.isEmpty(select)){
+                        sel.setDescription(e.getDescription());
+                        sel.setCreated(loginInfo.getId());
+                        sel.setGmtCreate(new Date());
+                        sel.setGmtModified(new Date());
+                        sel.setDeleted(new Byte("0"));
+                        int insert = noteTagMapper.insert(sel);
+                        // 返回插入的id
+                        e.setId(sel.getId());
+                        log.info("文章标签保存数据=[{}],保存结果=[{}]",sel.toString(),insert);
+                    }
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+                log.error("标签保存数据库失败,msg=[{}]",e.getMessage());
+            }
+
+            // 保存到文章中到id和title两字段有就可以
+            content.setTagList(noteTags);
+            NoteContent save = noteContentDao.save(content);
+            log.info("保存文章标签结束保存数据=[{}]",save.toString());
+
+        }
+        return ResultBean.success();
     }
 }

@@ -11,6 +11,7 @@
     <result column="methods" property="methods" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="action_url" property="actionUrl" jdbcType="VARCHAR" />
+    <result column="action_address" property="actionAddress" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
     <result column="commite" property="commite" jdbcType="TINYINT" />

@@ -21,22 +21,27 @@
     <el-table-column label="标签" min-width="280">
       <template slot-scope="scope">
         <el-tag
-          :key="tag"
-          v-for="tag in dynamicTags"
+          :key="tag.id"
+          v-for="tag in scope.row.tagList"
           closable
           :disable-transitions="false"
-          @close="handleClose(tag)"
-        >{{tag}}{{scope.row.create}}</el-tag>
+          @close="handleClose(tag,scope.row)"
+        >{{tag.title}}</el-tag>
         <el-input
           class="input-new-tag"
-          v-if="inputVisible"
+          v-if="scope.row.inputVisible"
           v-model="inputValue"
           ref="saveTagInput"
           size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
+          @keyup.enter.native="handleInputConfirm(scope.row)"
+          @blur="handleInputConfirm(scope.row)"
         ></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+        <el-button
+          v-else
+          class="button-new-tag"
+          size="small"
+          @click="showInput(scope.row)"
+        >+ New Tag</el-button>
       </template>
     </el-table-column>
     <el-table-column label="操作">
@@ -55,6 +60,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { updateNoteTag } from '@/api/diary/Diary'
 
 export default {
   props: {
@@ -76,6 +82,7 @@ export default {
     return {
       dynamicTags: ['标签一', '标签二', '标签三'],
       inputVisible: false,
+      link: '',
       inputValue: '',
       showDeleteBtn:
         localStorage.getItem('showDeleteBtn') === null
@@ -104,23 +111,40 @@ export default {
     showContent (row) {
       this.setContent(row)
     },
-    handleClose (tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+    handleClose (tag, row) {
+      row.tagList.splice(row.tagList.indexOf(tag), 1)
+      const params = {
+        contentId: row.id,
+        tagList: row.tagList
+      }
+      updateNoteTag(params)
     },
 
-    showInput () {
-      this.inputVisible = true
+    showInput (row) {
+      row.inputVisible = true
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
 
-    handleInputConfirm () {
+    handleInputConfirm (row) {
       let inputValue = this.inputValue
       if (inputValue) {
-        this.dynamicTags.push(inputValue)
+        const a = {
+          title: inputValue,
+          description: '日记创建标签'
+        }
+        if (row.tagList === undefined || row.tagList === null) {
+          row.tagList = []
+        }
+        row.tagList.push(a)
+        const params = {
+          contentId: row.id,
+          tagList: row.tagList
+        }
+        updateNoteTag(params)
       }
-      this.inputVisible = false
+      row.inputVisible = false
       this.inputValue = ''
     }
   }

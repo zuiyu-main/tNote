@@ -15,15 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 public interface NoteContentService {
     ResultBean test();
 
-    ResultBean<NoteContent> save(HttpServletRequest request, NoteContentVO noteContentVO);
+    ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO);
 
-    ResultBean<NoteContent> delete(HttpServletRequest request, String contentId);
+    ResultBean delete(HttpServletRequest request, String contentId);
 
-    ResultBean<NoteContent> updateTitle(HttpServletRequest request, String contentId, String title);
+    ResultBean updateTitle(HttpServletRequest request, String contentId, String title);
 
-    ResultBean<NoteContent> updateContent(HttpServletRequest request, String contentId, String content);
+    ResultBean updateContent(HttpServletRequest request, String contentId, String content);
 
-    ResultBean<NoteContent> getItem(HttpServletRequest request);
+    ResultBean getItem(HttpServletRequest request);
 
     ResultBean getNoteByItem(HttpServletRequest request, String itemId);
+
+    ResultBean updateNoteTag(HttpServletRequest request, String contentId, String tagList);
 }
