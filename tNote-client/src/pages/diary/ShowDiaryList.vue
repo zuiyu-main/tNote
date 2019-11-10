@@ -36,12 +36,12 @@
           @keyup.enter.native="handleInputConfirm(scope.row)"
           @blur="handleInputConfirm(scope.row)"
         ></el-input>
-        <el-button
+        <!-- <el-button
           v-else
           class="button-new-tag"
           size="small"
           @click="showInput(scope.row)"
-        >+ New Tag</el-button>
+        >+ New Tag</el-button>-->
       </template>
     </el-table-column>
     <el-table-column label="操作">
@@ -53,6 +53,12 @@
           type="danger"
           @click="handleDelete(scope.$index, scope.row)"
         >删除</el-button>
+        <el-button
+          v-else
+          class="button-new-tag"
+          size="small"
+          @click="showInput(scope.row)"
+        >+ New Tag</el-button>
       </template>
     </el-table-column>
   </el-table>
