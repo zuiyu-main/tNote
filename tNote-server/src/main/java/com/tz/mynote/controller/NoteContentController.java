@@ -42,7 +42,7 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="保存分类或日记内容")
     @ApiOperation(value ="save",notes = "保存分类或者日记内容",tags = "日记内容区")
-    public ResultBean<NoteContent> save(HttpServletRequest request, @RequestBody @Validated(value = SaveService.class) NoteContentVO noteContentVO, BindingResult bindingResult){
+    public ResultBean save(HttpServletRequest request, @RequestBody @Validated(value = SaveService.class) NoteContentVO noteContentVO, BindingResult bindingResult){
         return noteContentService.save(request,noteContentVO);
     }
     @DeleteMapping("/delete")

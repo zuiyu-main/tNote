@@ -88,6 +88,9 @@ public class NoteContentServiceImpl implements NoteContentService {
         content.setDeleted(0);
         if(null == content.getId()){
             content.setId(UUID.randomUUID().toString());
+        }else{
+            content.setGmtCreate(new Date());
+            content.setGmtModified(new Date());
         }
         if(CommonConstant.FILE.equals(content.getType())){
             if(null == content.getItemId()){
@@ -99,8 +102,6 @@ public class NoteContentServiceImpl implements NoteContentService {
             content.setItemId(CommonConstant.BASE_ITEM);
             content.setContent("class");
         }
-        content.setGmtCreate(new Date());
-        content.setGmtModified(new Date());
         NoteContent save = mongoTemplate.save(content, MongoCollectionName.NOTE_CONTENT);
         log.info("保存（分类）日记成功，保存参【{}】",save);
         return ResultBean.successData(save);
