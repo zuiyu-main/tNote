@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(mavonEditor)
 router.beforeEach((to, from, next) => {
-  if (to.fullPath !== '/' && to.fullPath !== '/404') {
+  if (to.fullPath !== '/' && to.fullPath !== '/404' && to.fullPath !== '/register') {
     if (localStorage.getItem('token') === null) {
       next({
         path: '/login'

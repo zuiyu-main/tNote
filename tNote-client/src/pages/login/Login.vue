@@ -23,7 +23,7 @@
               <el-link
                 icon="el-icon-user"
                 class="register_title"
-                href="/#/register"
+                @click="register"
                 :underline="false"
               >注册</el-link>
               <el-radio label="记住密码"></el-radio>
