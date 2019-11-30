@@ -18,7 +18,7 @@ import org.springframework.validation.BindingResult;
 @Component
 public class ControllerValidatorInterceptor {
 
-    @Around("execution(public * com.tz.mynote.controller..*.*(..)) && args(..,bindingResult)")
+    @Around("execution(public * com.tz.mynote.note.controller..*.*(..)) && args(..,bindingResult)")
     public Object doAround(ProceedingJoinPoint pjp, BindingResult bindingResult) throws Throwable {
         Object retVal;
         if (bindingResult.hasErrors()) {

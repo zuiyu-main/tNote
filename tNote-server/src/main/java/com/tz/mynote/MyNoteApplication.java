@@ -2,7 +2,6 @@ package com.tz.mynote;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//@MapperScan("com.tz.mynote.dao")
 @SpringBootApplication
 public class MyNoteApplication {
 

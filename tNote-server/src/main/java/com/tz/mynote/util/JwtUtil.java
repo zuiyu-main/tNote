@@ -2,7 +2,7 @@ package com.tz.mynote.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.tz.mynote.bean.NoteUsers;
+import com.tz.mynote.note.bean.NoteUsers;
 
 import java.io.UnsupportedEncodingException;
 

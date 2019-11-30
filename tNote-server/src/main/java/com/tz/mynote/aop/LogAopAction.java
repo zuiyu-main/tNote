@@ -1,8 +1,8 @@
 package com.tz.mynote.aop;
 
 import com.tz.mynote.annotation.OptionalLog;
-import com.tz.mynote.bean.NoteLog;
-import com.tz.mynote.service.LogService;
+import com.tz.mynote.note.bean.NoteLog;
+import com.tz.mynote.note.service.LogService;
 import com.tz.mynote.util.GsonUtil;
 import com.tz.mynote.util.LoginInfoUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,8 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +38,7 @@ public class LogAopAction {
     private LogService logService;
 
     // 配置接入点，即为所要记录的action操作目录
-//    @Pointcut("execution(public * com.tz.mynote.controller..*.*(..))")
+//    @Pointcut("execution(public * com.tz.mynote.note.controller..*.*(..))")
     @Pointcut("@annotation(com.tz.mynote.annotation.OptionalLog)")
     private void controllerAspect() {
     }

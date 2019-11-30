@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tz.mynote.dao.NoteOrganizationMapper" >
-  <resultMap id="BaseResultMap" type="com.tz.mynote.bean.NoteOrganization" >
+<mapper namespace="com.tz.mynote.note.dao.NoteOrganizationMapper" >
+  <resultMap id="BaseResultMap" type="com.tz.mynote.note.bean.NoteOrganization" >
     <!--
       WARNING - @mbg.generated
     -->

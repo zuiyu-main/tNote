@@ -23,13 +23,13 @@
                         password="root">
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.tz.mynote.bean"
+        <javaModelGenerator targetPackage="com.tz.mynote.note.bean"
                             targetProject="src/main/java"/>
 
         <sqlMapGenerator targetPackage="mapper"
                          targetProject="src/main/resources"/>
 
-        <javaClientGenerator targetPackage="com.tz.mynote.dao"
+        <javaClientGenerator targetPackage="com.tz.mynote.note.dao"
                              targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
