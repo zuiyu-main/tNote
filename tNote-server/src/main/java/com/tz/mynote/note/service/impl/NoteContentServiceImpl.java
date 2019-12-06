@@ -18,7 +18,7 @@ import com.tz.mynote.util.SnowFlakeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -87,6 +87,8 @@ public class NoteContentServiceImpl implements NoteContentService {
         content.setDeleted(0);
         if(null == content.getId()){
             content.setId(UUID.randomUUID().toString());
+            content.setGmtCreate(new Date());
+            content.setGmtModified(new Date());
         }else{
             content.setGmtCreate(new Date());
             content.setGmtModified(new Date());
@@ -155,13 +157,18 @@ public class NoteContentServiceImpl implements NoteContentService {
     }
 
     @Override
-    public ResultBean getNoteByItem(HttpServletRequest request, String itemId) {
+    public ResultBean getNoteByItem(HttpServletRequest request, String itemId,Integer pageNum,Integer pageSize) {
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
+        Sort sort = Sort.by(Sort.Direction.DESC, "gmtCreate");
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
         Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(0).and("deleted").is(0).and("itemId").is(itemId));
-        query.with(new Sort(Sort.Direction.DESC,"gmtCreate"));
+//        query.with(new Sort(Sort.Direction.DESC,"gmtCreate"));
+        query.with(pageable);
         log.info("查询分类id={}下日记，query={}",itemId,query);
+//        long total = mongoTemplate.count(query, NoteContent.class);
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class, MongoCollectionName.NOTE_CONTENT);
         log.info("查询分类日记结束，查询结果={}",noteContents);
+//        Page<NoteContent> NoteContent = new PageImpl(noteContents, pageable, total);
         return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).data(noteContents).total(noteContents.size()).build();
     }
 

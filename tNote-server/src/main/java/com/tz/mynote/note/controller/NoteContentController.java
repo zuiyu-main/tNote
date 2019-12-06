@@ -75,8 +75,9 @@ public class NoteContentController {
     @UserLoginToken
     @OptionalLog(module="日记内容", methods="获取某个分类下面笔记")
     @ApiOperation(value ="getNoteByItem",notes = "获取某个分类下面笔记",tags = "日记内容区")
-    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam String itemId){
-        return noteContentService.getNoteByItem(request,itemId);
+    public ResultBean getNoteByItem(HttpServletRequest request,@RequestParam String itemId,@RequestParam(required = false,defaultValue = "1") Integer pageNum,
+                                    @RequestParam(required = false,defaultValue = "10") Integer pageSize){
+        return noteContentService.getNoteByItem(request,itemId,pageNum,pageSize);
     }
 
     @PutMapping("/updateNoteTag")

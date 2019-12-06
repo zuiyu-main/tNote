@@ -1,6 +1,6 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"http://127.0.0.1:1997/"',
-  WEB_SOCKET: '"127.0.0.1:1997"'
+  API_ROOT: '"http://www.bjcyjyzx.cn:1997/"',
+  WEB_SOCKET: '"www.bjcyjyzx.cn:1997"'
 }

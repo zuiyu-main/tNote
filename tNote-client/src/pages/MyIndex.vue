@@ -70,58 +70,66 @@
             </el-submenu>
           </el-menu>
         </el-aside>
-        <el-main style="padding: 0px;">
-          <div v-if="showEdit" class="hei">
-            <el-input v-model="form.name" placeholder="日记名称">
-              <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
-            </el-input>
-            <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="edit.content"></uEdit>
-            <mark-down
-              v-if="noteType === 'md'"
-              class="hei"
-              ref="markdown"
-              v-bind:mdContent="edit.content"
-            ></mark-down>
-            <el-drawer
-              title="请选择详情设置"
-              :before-close="handleClose"
-              :visible.sync="drawer"
-              direction="rtl"
-              custom-class="demo-drawer"
-              ref="drawer"
-            >
-              <div class="demo-drawer__content">
-                <el-form :model="form">
-                  <el-form-item label="日记名称" :label-width="formLabelWidth">
-                    <el-input disabled v-model="form.name" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="日记分类" :label-width="formLabelWidth">
-                    <el-select v-model="form.item" placeholder="请选择分类">
-                      <el-option
-                        v-for="(item,index) in itemData"
-                        :key="index"
-                        :label="item.title"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-                <div class="demo-drawer__footer">
-                  <el-button @click="drawer = false">取 消</el-button>
-                  <el-button
-                    type="primary"
-                    @click="$refs.drawer.closeDrawer()"
-                    :loading="loading"
-                  >{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+        <el-container>
+          <el-main style="padding: 0px;position:relative">
+            <div v-if="showEdit" class="hei">
+              <el-input v-model="form.name" placeholder="日记名称">
+                <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
+              </el-input>
+              <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="edit.content"></uEdit>
+              <mark-down
+                v-if="noteType === 'md'"
+                class="hei"
+                ref="markdown"
+                v-bind:mdContent="edit.content"
+              ></mark-down>
+              <el-drawer
+                title="请选择详情设置"
+                :before-close="handleClose"
+                :visible.sync="drawer"
+                direction="rtl"
+                custom-class="demo-drawer"
+                ref="drawer"
+              >
+                <div class="demo-drawer__content">
+                  <el-form :model="form">
+                    <el-form-item label="日记名称" :label-width="formLabelWidth">
+                      <el-input disabled v-model="form.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="日记分类" :label-width="formLabelWidth">
+                      <el-select v-model="form.item" placeholder="请选择分类">
+                        <el-option
+                          v-for="(item,index) in itemData"
+                          :key="index"
+                          :label="item.title"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-form>
+                  <div class="demo-drawer__footer">
+                    <el-button @click="drawer = false">取 消</el-button>
+                    <el-button
+                      type="primary"
+                      @click="$refs.drawer.closeDrawer()"
+                      :loading="loading"
+                    >{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+                  </div>
                 </div>
-              </div>
-            </el-drawer>
-          </div>
-          <div v-else>
-            <show-diary v-if="link === 'show'" :diaryData="diaryData" @handleDelete="handleDelete"></show-diary>
-            <setter-content v-else-if="link === 'setter'"></setter-content>
-          </div>
-        </el-main>
+              </el-drawer>
+            </div>
+            <div v-else>
+              <show-diary
+                v-if="link === 'show'"
+                :diaryData="diaryData"
+                @handleDelete="handleDelete"
+                @selectPageNum="selectPageNum"
+              ></show-diary>
+              <setter-content v-else-if="link === 'setter'"></setter-content>
+            </div>
+          </el-main>
+          <el-footer>@TZ笔记(联系邮箱:3128379695@qq.com)</el-footer>
+        </el-container>
       </el-container>
     </el-container>
   </div>
@@ -165,7 +173,9 @@ export default {
       formLabelWidth: '80px', // 抽屉label
       noteType: '',
       loginUser: JSON.parse(localStorage.getItem('userInfo')).realName,
-      link: '' // 当前内容区域显示
+      link: '', // 当前内容区域显示
+      pageNum: 1, // 展示分页数据，第几页
+      itemObject: null // 当前选中的分类
     }
   },
   computed: {
@@ -322,9 +332,10 @@ export default {
       if (item === undefined) {
         return
       }
+      // 设置显示list
       this.link = 'show'
+      this.itemObject = item
       EncryptionApi.check({ targetId: item.id }).then(check => {
-        console.log(check)
         // false 没有加密 true 加密
         if (check.code === 200 && check.data === false) {
           this.getNoteByItem(item.id)
@@ -360,8 +371,12 @@ export default {
       })
     },
     getNoteByItem (params) {
-      DiaryApi.getNoteByItem({ itemId: params }).then(res => {
-        console.log('获取日记', res)
+      const select = {
+        itemId: params,
+        pageNum: this.pageNum,
+        pageSize: 10
+      }
+      DiaryApi.getNoteByItem(select).then(res => {
         this.showEdit = false
         if (res.code === 200) {
           this.diaryData = res.data
@@ -428,6 +443,13 @@ export default {
           })
         }
       })
+    },
+    /**
+     * 页码选中回调
+     */
+    selectPageNum (pageNum) {
+      this.pageNum = pageNum
+      this.getNoteByItem(this.itemObject.id)
     }
   },
   mounted () {

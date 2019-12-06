@@ -14,7 +14,7 @@ export function getItem () {
   return request('get', '/note/getItem')
 }
 /**
- * 查看我的分类
+ * 查看我的分类记录
  * @param {}} data
  */
 export function getNoteByItem (data) {

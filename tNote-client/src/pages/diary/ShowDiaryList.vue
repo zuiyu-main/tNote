@@ -1,67 +1,76 @@
 <template>
-  <el-table :data="diaryData" style="width: 100%">
-    <el-table-column label="名称" width="180">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">
-          <el-link
-            :underline="false"
-            icon="el-icon-view el-icon--right"
-            :title="scope.row.title"
-          >{{ scope.row.title | ellipsis}}</el-link>
-        </span>
-      </template>
-    </el-table-column>
+  <div>
+    <el-table :data="diaryData" style="width: 100%">
+      <el-table-column label="名称" width="180">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">
+            <el-link
+              :underline="false"
+              icon="el-icon-view el-icon--right"
+              :title="scope.row.title"
+            >{{ scope.row.title | ellipsis}}</el-link>
+          </span>
+        </template>
+      </el-table-column>
 
-    <el-table-column label="日期" width="180">
-      <template slot-scope="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.gmtCreate }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column label="标签" min-width="280">
-      <template slot-scope="scope">
-        <el-tag
-          :key="tag.id"
-          v-for="tag in scope.row.tagList"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag,scope.row)"
-        >{{tag.title}}</el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="scope.row.inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm(scope.row)"
-          @blur="handleInputConfirm(scope.row)"
-        ></el-input>
-        <!-- <el-button
+      <el-table-column label="日期" width="180">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.gmtCreate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="标签" min-width="280">
+        <template slot-scope="scope">
+          <el-tag
+            :key="tag.id"
+            v-for="tag in scope.row.tagList"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag,scope.row)"
+          >{{tag.title}}</el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="scope.row.inputVisible"
+            v-model="inputValue"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm(scope.row)"
+            @blur="handleInputConfirm(scope.row)"
+          ></el-input>
+          <!-- <el-button
           v-else
           class="button-new-tag"
           size="small"
           @click="showInput(scope.row)"
-        >+ New Tag</el-button>-->
-      </template>
-    </el-table-column>
-    <el-table-column label="操作">
-      <template slot-scope="scope">
-        <el-button size="mini" @click="showContent(scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          v-if="showDeleteBtn"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)"
-        >删除</el-button>
-        <el-button
-          v-else
-          class="button-new-tag"
-          size="small"
-          @click="showInput(scope.row)"
-        >+ New Tag</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+          >+ New Tag</el-button>-->
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="showContent(scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            v-if="showDeleteBtn"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+          >删除</el-button>
+          <el-button
+            v-else
+            class="button-new-tag"
+            size="small"
+            @click="showInput(scope.row)"
+          >+ New Tag</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="pagination"
+      background
+      layout="prev, pager, next"
+      :total="total"
+      @current-change="currentChange"
+    ></el-pagination>
+  </div>
 </template>
 
 <script>
@@ -93,7 +102,8 @@ export default {
       showDeleteBtn:
         localStorage.getItem('showDeleteBtn') === null
           ? false
-          : localStorage.getItem('showDeleteBtn') // 是否显示删除按钮
+          : localStorage.getItem('showDeleteBtn'), // 是否显示删除按钮
+      total: 100 // 数据总数
       // tableData: [
       //   {
       //     date: '2016-05-02',
@@ -132,7 +142,6 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
-
     handleInputConfirm (row) {
       let inputValue = this.inputValue
       if (inputValue) {
@@ -152,6 +161,9 @@ export default {
       }
       row.inputVisible = false
       this.inputValue = ''
+    },
+    currentChange (pageNum) {
+      this.$emit('selectPageNum', pageNum)
     }
   }
 }
@@ -178,5 +190,10 @@ export default {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
+}
+.pagination {
+  position: absolute;
+  bottom: 0%;
+  left: 35%;
 }
 </style>
