@@ -46,7 +46,7 @@ mapper:
 logging:
   level:
     com.tz.mynote: debug
-  file: log/tNote-server.log
+  file: log/tNote-server-dev.log
 
 # 分页插件
 pagehelper:

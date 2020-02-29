@@ -14,6 +14,6 @@
     <result column="action_address" property="actionAddress" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
-    <result column="commite" property="commite" jdbcType="TINYINT" />
+    <result column="commit" property="commit" jdbcType="TINYINT" />
   </resultMap>
 </mapper>

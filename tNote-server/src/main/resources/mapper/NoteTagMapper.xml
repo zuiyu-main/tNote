@@ -7,8 +7,8 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="description" jdbcType="VARCHAR" property="desc" />
-    <result column="created" jdbcType="BIGINT" property="create" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="created" jdbcType="BIGINT" property="created" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
