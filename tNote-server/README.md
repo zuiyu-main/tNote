@@ -51,3 +51,6 @@ http://localhost:2000/swagger-ui.html
 * --spring.profiles.active=dev
 * 容器构建时指定环境变量,开发环境dev，**生产prod**
 * -e SPRING_PROFILES_ACTIVE="prod"
+
+# 启动程序加入skywalking 监控
+* 使用时使用Dockerfile2，为了在docker容器中无法在sky中注册，需要指定 [SW_AGENT_COLLECTOR_BACKEND_SERVICES] oap地址，默认127.0.0.1:11800
