@@ -45,7 +45,7 @@ mapper:
   identity: MYSQL # 配置主键自动增长(使用MYSQL原生方式)
 logging:
   level:
-    com.tz.mynote: debug
+    com.tz.mynote: info
   file: log/tNote-server-pro.log
 
 # 分页插件

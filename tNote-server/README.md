@@ -48,4 +48,6 @@ http://localhost:2000/swagger-ui.html
 配置截图
 ![image](https://github.com/TianPuJun/tNote/blob/master/tNote-server/src/main/resources/img/docker_run_setter.png)
 6. 运行命令指定配置文件
---spring.profiles.active=dev
+* --spring.profiles.active=dev
+* 容器构建时指定环境变量,开发环境dev，**生产prod**
+* -e SPRING_PROFILES_ACTIVE="prod"
