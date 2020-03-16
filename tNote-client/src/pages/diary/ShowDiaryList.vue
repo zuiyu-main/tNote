@@ -82,6 +82,16 @@ export default {
     diaryData: {
       type: Array,
       required: true
+    },
+    // 文章总数
+    diaryTotal: {
+      type: Number,
+      required: true
+    }
+  },
+  watch: {
+    diaryTotal (data) {
+      this.total = data
     }
   },
   filters: {
@@ -103,7 +113,7 @@ export default {
         localStorage.getItem('showDeleteBtn') === null
           ? false
           : localStorage.getItem('showDeleteBtn'), // 是否显示删除按钮
-      total: 100 // 数据总数
+      total: this.diaryTotal // 数据总数
       // tableData: [
       //   {
       //     date: '2016-05-02',

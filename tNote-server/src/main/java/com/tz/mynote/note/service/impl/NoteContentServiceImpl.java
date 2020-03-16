@@ -163,13 +163,13 @@ public class NoteContentServiceImpl implements NoteContentService {
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
         Query query = new Query(Criteria.where("authorId").is(loginInfo.getId()).and("type").is(0).and("deleted").is(0).and("itemId").is(itemId));
 //        query.with(new Sort(Sort.Direction.DESC,"gmtCreate"));
+        long total = mongoTemplate.count(query, NoteContent.class);
         query.with(pageable);
         log.info("查询分类id={}下日记，query={}",itemId,query);
-//        long total = mongoTemplate.count(query, NoteContent.class);
         List<NoteContent> noteContents = mongoTemplate.find(query, NoteContent.class, MongoCollectionName.NOTE_CONTENT);
         log.info("查询分类日记结束，查询结果={}",noteContents);
 //        Page<NoteContent> NoteContent = new PageImpl(noteContents, pageable, total);
-        return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).data(noteContents).total(noteContents.size()).build();
+        return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).data(noteContents).total(Integer.valueOf(String.valueOf(total))).build();
     }
 
     @Override

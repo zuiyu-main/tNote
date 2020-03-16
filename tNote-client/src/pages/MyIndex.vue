@@ -122,6 +122,7 @@
               <show-diary
                 v-if="link === 'show'"
                 :diaryData="diaryData"
+                :diaryTotal="diaryTotal"
                 @handleDelete="handleDelete"
                 @selectPageNum="selectPageNum"
               ></show-diary>
@@ -158,6 +159,7 @@ export default {
     return {
       itemData: [], // 分类数据
       diaryData: [], // 当前日记数据
+      diaryTotal: 0, // 当前分类日记总条数
       ss: this.$store.state.diary.data,
       showEdit: false, // 显示编辑器
       edit: {
@@ -232,13 +234,12 @@ export default {
       this.drawer = true
     },
     handleClose (done) {
-      this.$confirm('确定要提交表单吗？')
+      this.$confirm('确定要保存吗？')
         .then(_ => {
           this.loading = true
           setTimeout(() => {
             this.loading = false
             done()
-            this.saveContent()
           }, 1000)
         })
         .catch(_ => {})
@@ -379,7 +380,9 @@ export default {
       DiaryApi.getNoteByItem(select).then(res => {
         this.showEdit = false
         if (res.code === 200) {
+          console.log('查询返回结果:', res)
           this.diaryData = res.data
+          this.diaryTotal = res.total
         } else {
           this.diaryData = []
           this.$message.error(res.msg)
