@@ -13,6 +13,7 @@ import com.tz.mynote.constant.MongoCollectionName;
 import com.tz.mynote.note.dao.NoteTagMapper;
 import com.tz.mynote.note.dao.mongo.NoteContentDao;
 import com.tz.mynote.note.service.NoteContentService;
+import com.tz.mynote.util.BeanUtils;
 import com.tz.mynote.util.LoginInfoUtil;
 import com.tz.mynote.util.SnowFlakeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,35 +80,42 @@ public class NoteContentServiceImpl implements NoteContentService {
      * @return
      */
     @Override
-    public ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO) {
+    public ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO) throws FileNotFoundException, IllegalAccessException {
         log.info("保存（分类）日记，接受参数=【{}】",noteContentVO);
         NoteContent content = new NoteContent();
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
-        beanCopier.copy(noteContentVO,content,null);
-        content.setAuthor(loginInfo.getRealName());
-        content.setAuthorId(loginInfo.getId());
-        content.setDeleted(0);
-        if(null == content.getId()){
+        if(StringUtils.isEmpty(noteContentVO.getId())){
+            beanCopier.copy(noteContentVO,content,null);
+            content.setAuthor(loginInfo.getRealName());
+            content.setAuthorId(loginInfo.getId());
+            content.setDeleted(0);
             content.setId(UUID.randomUUID().toString());
             content.setGmtCreate(new Date());
             content.setGmtModified(new Date());
-        }else{
-            content.setGmtCreate(new Date());
-            content.setGmtModified(new Date());
-        }
-        if(CommonConstant.FILE.equals(content.getType())){
-            if(null == content.getItemId()){
-                // 未分类文章统一类别
+            if(CommonConstant.FILE.equals(content.getType())){
+                if(null == content.getItemId()){
+                    // 未分类文章统一类别
+                    content.setItemId(CommonConstant.BASE_ITEM);
+                }
+            }else{
+                content.setSuffix(FileSuffixEnum.DIR);
                 content.setItemId(CommonConstant.BASE_ITEM);
+                content.setContent("class");
             }
         }else{
-            content.setSuffix(FileSuffixEnum.DIR);
-            content.setItemId(CommonConstant.BASE_ITEM);
-            content.setContent("class");
+            Query query = new  Query(Criteria.where("id").is(noteContentVO.getId()));
+            content = mongoTemplate.findOne(query, NoteContent.class);
+            if (null == content){
+                throw new FileNotFoundException("笔记内容未找到");
+            }else{
+                BeanUtils.ifNullSet(content,noteContentVO);
+                log.info("noteContent:[{}]",content.toString());
+            }
         }
         NoteContent save = mongoTemplate.save(content, MongoCollectionName.NOTE_CONTENT);
-        log.info("保存（分类）日记成功，保存参【{}】",save);
+        log.info("保存（分类）日记成功，保存参[{}]",save);
         return ResultBean.successData(save);
+
     }
 
     @Override

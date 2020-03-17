@@ -2,12 +2,14 @@ package com.tz.mynote.note.bean.vo;
 
 import com.tz.mynote.common.dao.SaveService;
 import com.tz.mynote.common.dao.UpdateService;
+import com.tz.mynote.note.bean.NoteTag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author tz
@@ -47,10 +49,16 @@ public class NoteContentVO {
      * 创建人
      */
     private String author;
+
     /**
      * 创建人id
      */
     private Long authorId;
+
+    /**
+     * 标签集合
+     */
+    private List<NoteTag> tagList;
     /**
      * 创建时间
      */

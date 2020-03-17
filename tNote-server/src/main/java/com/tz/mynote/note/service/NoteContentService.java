@@ -4,6 +4,7 @@ import com.tz.mynote.note.bean.vo.NoteContentVO;
 import com.tz.mynote.common.bean.ResultBean;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 
 /**
  * @author tz
@@ -20,7 +21,7 @@ public interface NoteContentService {
      * @param noteContentVO
      * @return
      */
-    ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO);
+    ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO) throws FileNotFoundException, IllegalAccessException;
 
     /**
      * 删除

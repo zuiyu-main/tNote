@@ -193,7 +193,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('diary', ['setData']),
+    ...mapActions('diary', ['setData', 'getContent']),
     open () {
       this.$prompt('请输入新分类名称', '提示', {
         confirmButtonText: '确定',
@@ -240,6 +240,7 @@ export default {
           setTimeout(() => {
             this.loading = false
             done()
+            this.saveContent()
           }, 1000)
         })
         .catch(_ => {})
@@ -333,6 +334,7 @@ export default {
       if (item === undefined) {
         return
       }
+      this.pageNum = 1
       // 设置显示list
       this.link = 'show'
       this.itemObject = item
@@ -407,7 +409,10 @@ export default {
         suffix: suffix,
         id: this.form.id
       }
-      console.log('保存参数', item)
+      if (this.showContent.id === item.id) {
+        item.tagList = this.showContent.tagList
+      }
+      this.showContent.title = this.form.name
       DiaryApi.save(item).then(res => {
         if (res.code === 200) {
           // 添加此id防止保存一次成功之后再次添加没有id进行重复添加
