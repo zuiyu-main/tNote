@@ -10,10 +10,10 @@
           <el-dropdown>
             <el-link icon="el-icon-document-add" :underline="false">新建日记</el-link>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
+              <!-- <el-dropdown-item
                 icon="el-icon-circle-plus-outline"
                 @click.native="openEdit('html')"
-              >新建富文本</el-dropdown-item>
+              >新建富文本</el-dropdown-item> -->
               <el-dropdown-item
                 icon="el-icon-circle-plus-outline"
                 @click.native="openEdit('md')"
@@ -34,9 +34,6 @@
 
       <el-container class="hei">
         <el-aside width="200px">
-          <!-- <li v-for="(item,index) in itemData " :key="index">
-          <el-button type="text" icon="el-icon-folder" @click="getDiary(item)">{{item.title}}</el-button>
-          </li>-->
           <el-menu :default-openeds="['1']" :unique-opened="false">
             <el-submenu index="1">
               <template slot="title">
@@ -73,50 +70,38 @@
         <el-container>
           <el-main style="padding: 0px;position:relative">
             <div v-if="showEdit" class="hei">
-              <el-input v-model="form.name" placeholder="日记名称">
+              <!-- <el-input v-model="form.name" placeholder="日记名称">
                 <el-button slot="append" title="保存" icon="el-icon-check" @click="submit"></el-button>
-              </el-input>
+              </el-input> -->
               <uEdit v-if="noteType === 'html'" class="hei" ref="ue" :value="edit.content"></uEdit>
               <mark-down
                 v-if="noteType === 'md'"
                 class="hei"
+                @save="getEditorContent"
                 ref="markdown"
                 v-bind:mdContent="edit.content"
               ></mark-down>
-              <el-drawer
-                title="请选择详情设置"
-                :before-close="handleClose"
-                :visible.sync="drawer"
-                direction="rtl"
-                custom-class="demo-drawer"
-                ref="drawer"
-              >
-                <div class="demo-drawer__content">
-                  <el-form :model="form">
-                    <el-form-item label="日记名称" :label-width="formLabelWidth">
-                      <el-input disabled v-model="form.name" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="日记分类" :label-width="formLabelWidth">
-                      <el-select v-model="form.item" placeholder="请选择分类">
-                        <el-option
+              <el-dialog title="日记详情" :visible.sync="dialogFormVisible">
+  <el-form :model="form">
+    <el-form-item label="日记名称" :label-width="formLabelWidth">
+      <el-input v-model="form.name" ></el-input>
+    </el-form-item>
+    <el-form-item label="日记分类" :label-width="formLabelWidth">
+      <el-select v-model="form.item" placeholder="请选择类别" style="display: block;">
+                      <el-option
                           v-for="(item,index) in itemData"
                           :key="index"
                           :label="item.title"
                           :value="item.id"
                         ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-form>
-                  <div class="demo-drawer__footer">
-                    <el-button @click="drawer = false">取 消</el-button>
-                    <el-button
-                      type="primary"
-                      @click="$refs.drawer.closeDrawer()"
-                      :loading="loading"
-                    >{{ loading ? '提交中 ...' : '确 定' }}</el-button>
-                  </div>
-                </div>
-              </el-drawer>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="saveContent()">确 定</el-button>
+  </div>
+</el-dialog>
             </div>
             <div v-else>
               <show-diary
@@ -170,7 +155,7 @@ export default {
         name: '',
         item: ''
       }, // form表单内容
-      drawer: false, // 显示抽屉
+      dialogFormVisible: false, // 显示抽屉
       loading: false, // 加载
       formLabelWidth: '80px', // 抽屉label
       noteType: '',
@@ -231,7 +216,7 @@ export default {
      * 抽屉提交
      */
     submit () {
-      this.drawer = true
+      this.dialogFormVisible = true
     },
     handleClose (done) {
       this.$confirm('确定要保存吗？')
@@ -396,11 +381,11 @@ export default {
      */
     saveContent () {
       const suffix = this.noteType
-      if (suffix === 'html') {
-        this.edit.content = this.$refs.ue.getUEContent()
-      } else {
-        this.edit.content = this.$refs.markdown.getMDContent()
-      }
+      // if (suffix === 'html') {
+      //   this.edit.content = this.$refs.ue.getUEContent()
+      // } else {
+      //   this.edit.content = this.$refs.markdown.getMDContent()
+      // }
       const item = {
         title: this.form.name,
         type: 0,
@@ -421,6 +406,7 @@ export default {
             message: res.msg,
             type: 'success'
           })
+          this.dialogFormVisible = false
         } else {
           this.$message.error(res.msg)
         }
@@ -458,6 +444,14 @@ export default {
     selectPageNum (pageNum) {
       this.pageNum = pageNum
       this.getNoteByItem(this.itemObject.id)
+    },
+    /**
+     * 获取编辑器的纯文本
+     */
+    getEditorContent (data) {
+      console.log('通用的获取内容', data)
+      this.edit.content = data
+      this.dialogFormVisible = true
     }
   },
   mounted () {

@@ -2,7 +2,7 @@
  <template>
   <div id="base">
     <div id="editor">
-      <mavon-editor ref="md" style="height:100%" v-model="content"></mavon-editor>
+      <mavon-editor ref="md" style="height:100%" v-model="content" :ishljs = "true" @save="save"></mavon-editor>
     </div>
     <!-- <div id="demo">@imgAdd="$imgAdd" @imgDel="$imgDel"</div> -->
   </div>
@@ -11,7 +11,6 @@
 // Local Registration
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-
 export default {
   name: 'editor',
   props: ['mdContent'],
@@ -56,6 +55,9 @@ export default {
     },
     getMDContent () {
       return this.content
+    },
+    save (data) {
+      this.$emit('save', data)
     }
   }
 }
