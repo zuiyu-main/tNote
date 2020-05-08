@@ -17,20 +17,18 @@ import org.springframework.web.bind.annotation.*;
 @Component
 public class ControllerAdvice {
     @ExceptionHandler(value = Exception.class)
-    public ResultBean errorHandler(Exception e){
-        log.error("发生异常，异常信息=[{}]",e.getMessage());
-        return  ResultBean.builder()
+    public ResultBean<Exception> errorHandler(Exception e){
+        return  ResultBean.<Exception>builder()
                 .msg(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .data(e.getMessage()).build();
+                .data(e).build();
     }
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResultBean illegalArgumentException(IllegalArgumentException e){
-        log.error("发生2异常，异常信息=[{}]",e.getMessage());
-        return  ResultBean.builder()
+    public ResultBean<Exception> illegalArgumentException(IllegalArgumentException e){
+        return  ResultBean.<Exception>builder()
                 .msg(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .data(e.getMessage()).build();
+                .data(e).build();
     }
 //    /**
 //     * 定义参数异常处理器.参数校验通过一场捕捉的方式返回校验结果

@@ -17,6 +17,7 @@ public class ResultBean<T> {
     private String msg;
     private Integer total;
     private T data;
+
     public static ResultBean success(){
         return ResultBean.builder().msg(HttpStatus.OK.getReasonPhrase()).code(HttpStatus.OK.value()).build();
     }
@@ -29,7 +30,7 @@ public class ResultBean<T> {
                 .code(HttpStatus.OK.value())
                 .data(data).build();
     }
-    public static  ResultBean successData(Object data){
+    public static  ResultBean<Object> successData(Object data){
         return ResultBean.builder()
                 .msg(HttpStatus.OK.getReasonPhrase())
                 .code(HttpStatus.OK.value())

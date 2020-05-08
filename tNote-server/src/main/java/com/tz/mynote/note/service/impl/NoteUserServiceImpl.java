@@ -182,7 +182,7 @@ public class NoteUserServiceImpl implements NoteUserService {
             boolean verify = PasswordUtil.verify(passWord, realPassWord);
             return verify;
         }catch (Exception e){
-            log.error("登录密码校验，密码验证不通过,错误信息=【{}】",e.getMessage());
+            log.error("登录密码校验，密码验证不通过,错误信息=[{}]",e.getMessage());
             return false;
         }
     }

@@ -81,7 +81,7 @@ public class NoteContentServiceImpl implements NoteContentService {
      */
     @Override
     public ResultBean save(HttpServletRequest request, NoteContentVO noteContentVO) throws FileNotFoundException, IllegalAccessException {
-        log.info("保存（分类）日记，接受参数=【{}】",noteContentVO);
+        log.info("保存（分类）日记，接受参数=[{}]",noteContentVO);
         NoteContent content = new NoteContent();
         NoteUsers loginInfo = loginInfoUtil.getLoginInfo(request);
         if(StringUtils.isEmpty(noteContentVO.getId())){
@@ -109,11 +109,12 @@ public class NoteContentServiceImpl implements NoteContentService {
                 throw new FileNotFoundException("笔记内容未找到");
             }else{
                 BeanUtils.ifNullSet(content,noteContentVO);
-                log.info("noteContent:[{}]",content.toString());
             }
         }
         NoteContent save = mongoTemplate.save(content, MongoCollectionName.NOTE_CONTENT);
-        log.info("保存（分类）日记成功，保存参[{}]",save);
+        if(log.isDebugEnabled()){
+            log.debug("保存（分类）日记成功，保存参数[{}]",save);
+        }
         return ResultBean.successData(save);
 
     }
@@ -190,8 +191,8 @@ public class NoteContentServiceImpl implements NoteContentService {
         try {
              noteTags = JSONArray.parseArray(tagList, NoteTag.class);
         }catch (Exception e){
-            e.printStackTrace();
             log.error("更新日记标签失败，转换tagList失败,msg=[{}]",e.getMessage());
+            throw e;
         }
         NoteContent content = noteContentDao.findById(contentId).orElse(null);
         if(null == content){
@@ -220,8 +221,8 @@ public class NoteContentServiceImpl implements NoteContentService {
                     }
                 });
             }catch (Exception e){
-                e.printStackTrace();
                 log.error("标签保存数据库失败,msg=[{}]",e.getMessage());
+                throw  e;
             }
 
             // 保存到文章中到id和title两字段有就可以

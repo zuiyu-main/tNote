@@ -103,6 +103,7 @@ public class NoteEncryptionServiceImpl implements NoteEncryptionService {
                 log.debug("更新密码返回，更新结果=[{}],更新前=[{}]",i,lPass);
             }catch (Exception e){
                 log.error("密码修改报错，报错信息={}",e.getMessage());
+                throw e;
             }
             return ResultBean.success();
         }else{
