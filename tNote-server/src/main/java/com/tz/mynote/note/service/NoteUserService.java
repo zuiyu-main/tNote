@@ -1,8 +1,8 @@
 package com.tz.mynote.note.service;
 
+import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.note.bean.NoteUsers;
 import com.tz.mynote.note.bean.vo.NoteUsersVO;
-import com.tz.mynote.common.bean.ResultBean;
 
 import javax.servlet.http.HttpServletRequest;
 

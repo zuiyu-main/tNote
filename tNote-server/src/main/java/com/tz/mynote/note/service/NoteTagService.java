@@ -1,7 +1,7 @@
 package com.tz.mynote.note.service;
 
-import com.tz.mynote.note.bean.vo.NoteTagVO;
 import com.tz.mynote.common.bean.ResultBean;
+import com.tz.mynote.note.bean.vo.NoteTagVO;
 
 import javax.servlet.http.HttpServletRequest;
 

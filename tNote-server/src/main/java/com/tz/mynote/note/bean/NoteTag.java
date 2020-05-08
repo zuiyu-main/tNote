@@ -1,10 +1,15 @@
 package com.tz.mynote.note.bean;
 
-import java.util.Date;
-import javax.persistence.*;
-
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
+/**
+ * @author tz
+ */
 @Data
 @Table(name = "note_tag")
 public class NoteTag {

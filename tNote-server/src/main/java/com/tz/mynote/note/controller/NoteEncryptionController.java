@@ -2,9 +2,9 @@ package com.tz.mynote.note.controller;
 
 import com.tz.mynote.annotation.OptionalLog;
 import com.tz.mynote.annotation.UserLoginToken;
-import com.tz.mynote.note.bean.vo.NoteEncryptionVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.common.dao.SaveService;
+import com.tz.mynote.note.bean.vo.NoteEncryptionVO;
 import com.tz.mynote.note.service.NoteEncryptionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

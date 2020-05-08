@@ -47,7 +47,6 @@ public class LogAopAction {
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         //日志实体对象
         NoteLog noteLog = new NoteLog();
-
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest();
         // 从session获取用户名
@@ -60,23 +59,19 @@ public class LogAopAction {
         }
         // 获取系统当前时间
         noteLog.setGmtCreate(new Date());
-
         // 获取访问真实IP
         String ipAddress = LoginInfoUtil.getRequestIp(request);
 //        String address = LoginInfoUtil.getAddress(ipAddress);
         noteLog.setActionAddress("address todo 后续使用");
         noteLog.setIp(ipAddress);
-
         // 拦截的实体类，就是当前正在执行的controller
         Object target = pjp.getTarget();
         // 拦截的方法名称。当前正在执行的方法
         String methodName = pjp.getSignature().getName();
         // 拦截的方法参数
         Object[] args = pjp.getArgs();
-
         //获取请求路径
         String actionUrl = request.getRequestURI();
-
         // 拦截的放参数类型
         Signature sig = pjp.getSignature();
         MethodSignature msig = null;
@@ -85,12 +80,9 @@ public class LogAopAction {
         }
         msig = (MethodSignature) sig;
         Class[] parameterTypes = msig.getMethod().getParameterTypes();
-
         Object object = null;
         // 获得被拦截的方法
         Method method = null;
-
-
         try {
             method = target.getClass().getMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e1) {
@@ -123,14 +115,15 @@ public class LogAopAction {
                             newmap.put(name, new String[]{});
                             continue;
                         }
-                        String newvalues[] = new String[values.length];
+                        String[] newValues = new String[values.length];
                         for (int i = 0; i < values.length; i++) {
                             String value = values[i];
                             value = new String(value.getBytes("iso8859-1"), request.getCharacterEncoding());
-                            newvalues[i] = value; //解决乱码后封装到Map中
+                            //解决乱码后封装到Map中
+                            newValues[i] = value;
                         }
 
-                        newmap.put(name, newvalues);
+                        newmap.put(name, newValues);
 
                     }
                     noteLog.setContent(GsonUtil.toJson(newmap));
@@ -167,7 +160,6 @@ public class LogAopAction {
                     logService.save(noteLog);
                 }
             }
-
         }
         return object;
     }

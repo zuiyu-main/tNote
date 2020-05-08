@@ -1,7 +1,8 @@
 package com.tz.mynote.util;
-import	java.util.Map;
 
 import com.google.gson.Gson;
+
+import java.util.Map;
 
 /**
  * @author tz

@@ -1,9 +1,9 @@
 package com.tz.mynote.note.service.impl;
 
+import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.note.bean.NoteTag;
 import com.tz.mynote.note.bean.NoteUsers;
 import com.tz.mynote.note.bean.vo.NoteTagVO;
-import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.note.dao.NoteTagMapper;
 import com.tz.mynote.note.service.NoteTagService;
 import com.tz.mynote.util.GsonUtil;

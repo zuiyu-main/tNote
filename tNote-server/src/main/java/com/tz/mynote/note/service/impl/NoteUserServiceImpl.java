@@ -2,11 +2,11 @@ package com.tz.mynote.note.service.impl;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.tz.mynote.note.bean.NoteUsers;
-import com.tz.mynote.note.bean.vo.NoteUsersVO;
 import com.tz.mynote.common.bean.ResultBean;
 import com.tz.mynote.constant.Login;
 import com.tz.mynote.constant.RedisKey;
+import com.tz.mynote.note.bean.NoteUsers;
+import com.tz.mynote.note.bean.vo.NoteUsersVO;
 import com.tz.mynote.note.dao.NoteUsersMapper;
 import com.tz.mynote.note.service.NoteUserService;
 import com.tz.mynote.util.JwtUtil;

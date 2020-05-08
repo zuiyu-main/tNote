@@ -1,7 +1,5 @@
 package com.tz.mynote.util;
 
-import com.tz.mynote.note.bean.mongo.NoteContent;
-import com.tz.mynote.note.bean.vo.NoteContentVO;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;

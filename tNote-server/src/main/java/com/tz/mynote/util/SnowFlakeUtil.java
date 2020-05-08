@@ -1,7 +1,5 @@
 package com.tz.mynote.util;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @author C-UI
  * @Classname SnowFlakeUtil

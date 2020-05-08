@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.tz.mynote.note.bean.NoteUsers;
 import com.tz.mynote.constant.Login;
+import com.tz.mynote.note.bean.NoteUsers;
 import com.tz.mynote.note.service.NoteUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,8 @@ public class LoginInfoUtil {
             }
         }
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ipAddress != null && ipAddress.length() > 15) { //"***.***.***.***".length() = 15
+        //"***.***.***.***".length() = 15
+        if (ipAddress != null && ipAddress.length() > 15) {
             if (ipAddress.indexOf(",") > 0) {
                 ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
             }
@@ -124,7 +125,7 @@ public class LoginInfoUtil {
             int respCode = httpConn.getResponseCode();
             if (respCode == 200)
             {
-                return ConvertStream2Json(httpConn.getInputStream());
+                return convertStream2Json(httpConn.getInputStream());
             }
         }
         catch (MalformedURLException e)
@@ -137,7 +138,7 @@ public class LoginInfoUtil {
         }
         return "";
     }
-    private static String ConvertStream2Json(InputStream inputStream) {
+    private static String convertStream2Json(InputStream inputStream) {
         String jsonStr = "";
         // ByteArrayOutputStream相当于内存输出流
         ByteArrayOutputStream out = new ByteArrayOutputStream();

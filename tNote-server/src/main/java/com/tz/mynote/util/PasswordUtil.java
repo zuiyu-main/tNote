@@ -2,7 +2,6 @@ package com.tz.mynote.util;
 
 import org.apache.commons.codec.binary.Hex;
 
-import java.lang.reflect.InvocationTargetException;
 import java.security.MessageDigest;
 import java.util.Random;
 

@@ -9,5 +9,9 @@ import com.tz.mynote.note.bean.NoteLog;
  * @Date 2019-09-06 09:25
  */
 public interface LogService {
+    /**
+     * 保存操作日志
+     * @param noteLog
+     */
     void save(NoteLog noteLog);
 }

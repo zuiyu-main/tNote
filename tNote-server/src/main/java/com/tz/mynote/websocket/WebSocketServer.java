@@ -1,21 +1,15 @@
 package com.tz.mynote.websocket;
-import com.alibaba.druid.support.json.JSONUtils;
+
 import com.alibaba.fastjson.JSONObject;
-import com.tz.mynote.common.bean.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.*;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArraySet;
-
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
 
 /**
  * @author tz
@@ -42,8 +36,10 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session,@PathParam("sid") String sid) {
         this.session = session;
-        webSocketSet.add(this);     //加入set中
-        addOnlineCount();           //在线数加1
+        //加入set中
+        webSocketSet.add(this);
+        //在线数加1
+        addOnlineCount();
         log.info("有新窗口开始监听:"+sid+",当前在线人数为" + getOnlineCount());
         this.sid=sid;
         try {
@@ -136,8 +132,12 @@ public class WebSocketServer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         WebSocketServer that = (WebSocketServer) o;
         return Objects.equals(session, that.session) &&
                 Objects.equals(sid, that.sid);
