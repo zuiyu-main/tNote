@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tz</groupId>
-    <artifactId>mynote</artifactId>
+    <artifactId>tNote-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mynote</name>
+    <name>tNote-server</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

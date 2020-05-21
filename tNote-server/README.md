@@ -47,10 +47,18 @@ http://localhost:2000/swagger-ui.html
 第二步：配置docker插件配置，运行生成镜像和容器
 配置截图
 ![image](https://github.com/TianPuJun/tNote/blob/master/tNote-server/src/main/resources/img/docker_run_setter.png)
+
 6. 运行命令指定配置文件
 * --spring.profiles.active=dev
 * 容器构建时指定环境变量,开发环境dev，**生产prod**
 * -e SPRING_PROFILES_ACTIVE="prod"
+
+7. run options
+
+```text
+-e SPRING_PROFILES_ACTIVE="prod" --link tz_mysql:tz_mysql --link tz_redis:tz_redis --link tz_mongo:tz_mongo
+```
+
 
 # 启动程序加入skywalking 监控
 * 使用时使用Dockerfile2，为了在docker容器中无法在sky中注册，需要指定 [SW_AGENT_COLLECTOR_BACKEND_SERVICES] oap地址，默认127.0.0.1:11800
