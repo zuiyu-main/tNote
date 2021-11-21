@@ -135,6 +135,8 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+
+
     </dependencies>
 
     <build>
@@ -207,7 +209,7 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy todir="src/main/docker" file="target/${project.artifactId}-${project.version}.${project.packaging}"></copy>
+                                <copy todir="src/main/docker" file="target/${project.artifactId}-${project.version}.${project.packaging}"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -219,4 +221,21 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 </project>
